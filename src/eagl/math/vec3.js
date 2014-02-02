@@ -71,21 +71,9 @@ define( ['./types'], function( types ){
           y = b[1] - a[1],
           z = b[2] - a[2];
       return Math.sqrt( x*x + y*y + z*z );
-    },
-
-    transform : function(v, m) {
-      var x = v[0], y = v[1], z = v[2];
-      v[0] = m[0] * x + m[4] * y + m[8]  * z + m[12];
-      v[1] = m[1] * x + m[5] * y + m[9]  * z + m[13];
-      v[2] = m[2] * x + m[6] * y + m[10] * z + m[14];
-    },
-
-    deltaTransform : function(v, m) {
-      var x = v[0], y = v[1], z = v[2];
-      v[0] = m[0] * x + m[4] * y + m[8]  * z;
-      v[1] = m[1] * x + m[5] * y + m[9]  * z;
-      v[2] = m[2] * x + m[6] * y + m[10] * z;
     }
+
+
 
   };
 

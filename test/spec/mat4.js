@@ -3,45 +3,18 @@ var expect = require('expect.js');
 var lreq = require( "./lrequire" );
 var aequal = require( './aequal' );
 
+var mulRefs = require( '../refs/mat4_mul_ref.js');
+
 var mat4 = lreq( 'eagl/math/mat4' );
+
+var ref = mulRefs()[0],
+    sampleA = ref.a,
+    sampleB = ref.b;
 
 describe( "math - mat4", function(){
 
 
-  var matA, matB, identity;
-
-    beforeEach(function() {
-      var a;
-
-
-
-      a = [ 2, 0, 0, 0,
-            0, 2, 0, 0,
-            0, 0, 2, 0,
-            2, 1, 3, 1];
-
-      matA = mat4.create();
-      mat4.set( matA, a );
-
-      a = [ 3, 0, 0, 0,
-            0, 3, 0, 0,
-            0, 0, 3, 0,
-            4, 5, 3, 1];
-
-      matB = mat4.create();
-      mat4.set( matB, a );
-
-
-      identity = [1, 0, 0, 0,
-                  0, 1, 0, 0,
-                  0, 0, 1, 0,
-                  0, 0, 0, 1];
-    });
-
-
-
-
-
+  var m;
 
 
   describe( "create", function(){
@@ -75,6 +48,40 @@ describe( "math - mat4", function(){
       expect( m[13] ).to.be( 0.0 );
       expect( m[14] ).to.be( 0.0 );
       expect( m[15] ).to.be( 1.0 );
+
+    });
+
+  });
+
+  describe( "createFrom", function(){
+
+
+    it( "should accept Array argument", function(){
+
+      m = mat4.createFrom( [
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        5, 7, 9, 1
+      ]);
+
+      expect( m.length ).to.be( 16 );
+      expect( m[14]  ).to.be( 9.0 );
+
+    });
+
+
+
+    it( "should accept other matrix", function(){
+      m = mat4.create();
+      m[0] = 10.0;
+
+      var m2 = mat4.createFrom( m );
+      m[0] = 5.0;
+
+      expect( m2.length ).to.be( 16 );
+      expect( m2[0]  ).to.be( 10.0 );
+
 
     });
 
@@ -143,20 +150,64 @@ describe( "math - mat4", function(){
 
   describe( "mul", function(){
 
-    it( "should reset matrix", function(){
-      var b = [
-          6, 0, 0, 0,
-          0, 6, 0, 0,
-          0, 0, 6, 0,
-          10, 11, 9, 1
-      ];
-      m = mat4.create();
-      mat4.set( m, b );
+    it( "should multiply to output", function(){
 
-      var out = mat4.create();
-      mat4.mul( matA, matB, out );
+      var refs = mulRefs();
+      var ref;
+      var a = mat4.create(),
+          b = mat4.create(),
+          m = mat4.create(),
+          out = mat4.create();
 
-      aequal( out, m );
+      for( var i = 0, l = refs.length; i<l; i++ ) {
+        ref = refs[i];
+        mat4.copy( a, ref.a );
+        mat4.copy( b, ref.b );
+        mat4.copy( m, ref.mul );
+
+        mat4.mul( b, a, out );
+
+        aequal( out, m );
+
+      }
+
+
+    });
+
+    it( "should multiply itself", function(){
+      var refs = mulRefs();
+      var ref;
+      var a = mat4.create(),
+          b = mat4.create(),
+          m = mat4.create();
+
+      ref = refs[0];
+      mat4.copy( a, ref.a );
+      mat4.copy( b, ref.b );
+      mat4.copy( m, ref.mul );
+
+      mat4.mul( b, a, b );
+
+      aequal( b, m );
+
+    });
+
+  });
+
+  describe("invert", function() {
+
+    it( "should return source when called twice", function(){
+
+      var a = mat4.createFrom( sampleA );
+
+      m = mat4.createFrom( sampleA );
+
+      mat4.invert( m, m );
+      mat4.invert( m, m );
+
+      aequal( a, m );
+
+
 
     });
 

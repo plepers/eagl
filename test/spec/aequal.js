@@ -15,5 +15,6 @@ var equal = function( a, b ) {
 };
 
 module.exports = function(a,b) {
+  //console.log( equal(a,b) );
   expect( equal(a,b) ).to.be.ok();
 };
