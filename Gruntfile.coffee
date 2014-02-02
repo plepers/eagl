@@ -43,10 +43,9 @@ module.exports = (grunt) ->
     # Mocha
 
     mochaTest:
-      test:
-        options:
-          reporter: 'dot'
-        src: 'test/tests.js'
+      options:
+        reporter: 'dot'
+      src: 'test/tests.js'
 
 
 
