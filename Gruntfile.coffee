@@ -39,7 +39,26 @@ module.exports = (grunt) ->
         bare :                true
         injectExportsModule : false
 
+    # --------------------
+    # Mocha
 
-  grunt.registerTask "build", [
-    "urequire:node"
+    mochaTest:
+      test:
+        options:
+          reporter: 'dot'
+        src: 'test/tests.js'
+
+
+
+
+  grunt.registerTask "build",
+    [
+      "urequire:node"
+      "test"
+    ]
+
+
+  grunt.registerTask "test",
+    [
+      "mochaTest"
     ]

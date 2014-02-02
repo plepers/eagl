@@ -156,8 +156,6 @@ describe( "math - mat4", function(){
       var out = mat4.create();
       mat4.mul( matA, matB, out );
 
-      console.log( out );
-
       aequal( out, m );
 
     });

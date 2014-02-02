@@ -27,6 +27,8 @@
     "time-grunt": "~0.2.9",
     "load-grunt-tasks": "~0.3.0",
     "grunt-mocha": "~0.4.10",
-    "expect.js": "~0.2.0"
+    "expect.js": "~0.2.0",
+    "mocha": "~1.17.1",
+    "grunt-mocha-test": "~0.9.0"
   }
 }
