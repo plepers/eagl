@@ -22,6 +22,11 @@
   },
   "homepage": "https://github.com/plepers/eagl",
   "devDependencies": {
-    "grunt": "~0.4.2"
+    "grunt": "~0.4.2",
+    "grunt-urequire": "~0.6.0",
+    "time-grunt": "~0.2.9",
+    "load-grunt-tasks": "~0.3.0",
+    "grunt-mocha": "~0.4.10",
+    "expect.js": "~0.2.0"
   }
 }
