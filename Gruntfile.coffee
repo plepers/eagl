@@ -39,6 +39,15 @@ module.exports = (grunt) ->
         bare :                true
         injectExportsModule : false
 
+
+    # --------------------
+    # JSHint
+
+    jshint:
+      all: [
+        'src/**/*.js'
+      ]
+
     # --------------------
     # Mocha
 
@@ -52,6 +61,7 @@ module.exports = (grunt) ->
 
   grunt.registerTask "build",
     [
+      "jshint"
       "urequire:node"
       "test"
     ]
