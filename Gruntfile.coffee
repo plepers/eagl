@@ -63,11 +63,11 @@ module.exports = (grunt) ->
     [
       "jshint"
       "urequire:node"
-      "test"
+      "mochaTest"
     ]
 
 
   grunt.registerTask "test",
     [
-      "mochaTest"
+      "build"
     ]
