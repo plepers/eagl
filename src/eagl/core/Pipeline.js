@@ -88,12 +88,14 @@ define( function(){
       for (; i < l; i++) {
         thread = _threads[i];
         priority = thread._priority;
-        if( priority < prio )
-          match = i;
-        else if( priority === prio )
+
+        if( priority < prio ) {
+          match = i+1;
+        }
+        else if( priority === prio ){
           return thread;
-        else
-          break;
+        }
+        else break;
       }
 
       nthread = new Thread( prio );
