@@ -1,7 +1,11 @@
 
-define( function(){
-
-
+define(
+  [
+    './RenderUnit',
+  ],
+  function(
+    RenderUnit
+  ){
 
   _nullUnit = function(){
     var unit = new RenderUnit();

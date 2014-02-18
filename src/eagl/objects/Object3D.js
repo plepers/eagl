@@ -14,7 +14,6 @@ define( ['eagl/math/mat4'], function( mat4 ) {
     this.children     = [];
 
     this.renderables  = null;
-
     this.scene        = null;
 
   };

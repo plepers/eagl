@@ -25,19 +25,35 @@ module.exports = (grunt) ->
 
     urequire :
       umd:
-        template: "UMD" # default, can be ommited
-        path: "<%= dirs.sources %>"
-        dstPath: "<%= dirs.build %>/umd"
+        template:   "UMD" # default, can be ommited
+        path:       "<%= dirs.sources %>"
+        dstPath:    "<%= dirs.build %>/umd"
 
       node:
-        template: "nodejs"
-        path: "<%= dirs.sources %>"
-        dstPath: "<%= dirs.build %>/commonjs"
+        template:   "nodejs"
+        path:       "<%= dirs.sources %>"
+        dstPath:    "<%= dirs.build %>/commonjs"
+
+      combined:
+        template:   "combined"
+        path:       "<%= dirs.sources %>"
+        dstPath:    "<%= dirs.build %>/combined"
 
       _defaults:
-        runtimeInfo :         false
-        bare :                true
-        injectExportsModule : false
+        name: 'eagl'
+        main: 'index'
+        filez: ['**/*.*']
+        copy: [/./, '**/*']
+        dependencies:
+          exports:
+            root: {'index': 'eagl'}
+
+        runtimeInfo :         no
+        bare :                no
+        injectExportsModule : no
+        globalWindow :        true
+        useStrict :           yes
+        allNodeRequires: yes
 
 
     # --------------------
@@ -58,6 +74,13 @@ module.exports = (grunt) ->
 
 
 
+  grunt.registerTask "build-all",
+    [
+      "jshint"
+      "urequire:node"
+      "urequire:combined"
+      "mochaTest"
+    ]
 
   grunt.registerTask "build",
     [
