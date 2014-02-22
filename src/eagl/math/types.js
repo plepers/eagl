@@ -1,7 +1,8 @@
 define( function() {
 
-  var F32 = Float32Array,
-      F64 = Float64Array;
+  var F32 = Float32Array;
+  //,
+  //    F64 = Float64Array;
 
   var types = {
     Mat4Array : F32,

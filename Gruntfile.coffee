@@ -6,6 +6,8 @@ path = require 'path'
 
 module.exports = (grunt) ->
 
+  CI_PORT = 8981
+
   # show elapsed time at the end
   # require("time-grunt") grunt
 
@@ -16,8 +18,10 @@ module.exports = (grunt) ->
 
     # configurable paths
     dirs:
-      build: "build"
-      sources: "src"
+      build:    "build"
+      sources:  "src"
+      tmp:      ".tmp"
+      test:     "test"
 
 
     # --------------------
@@ -51,7 +55,7 @@ module.exports = (grunt) ->
         runtimeInfo :         no
         bare :                no
         injectExportsModule : no
-        globalWindow :        true
+        globalWindow :        no
         useStrict :           yes
         allNodeRequires: yes
 
@@ -67,11 +71,18 @@ module.exports = (grunt) ->
     # --------------------
     # Mocha
 
-    mochaTest:
-      options:
-        reporter: 'dot'
-      src: 'test/tests.js'
+    mocha_phantomjs:
+      all: ['test/index.html']
 
+
+    # --------------------
+    # Connect
+
+    connect:
+      server:
+        options:
+          port: CI_PORT
+          base: '.'
 
 
   grunt.registerTask "build-all",
@@ -79,18 +90,15 @@ module.exports = (grunt) ->
       "jshint"
       "urequire:node"
       "urequire:combined"
-      "mochaTest"
     ]
 
   grunt.registerTask "build",
     [
       "jshint"
       "urequire:node"
-      "mochaTest"
     ]
-
 
   grunt.registerTask "test",
     [
-      "build"
+      'mocha_phantomjs'
     ]

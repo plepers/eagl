@@ -23,14 +23,19 @@
   "homepage": "https://github.com/plepers/eagl",
   "devDependencies": {
     "grunt": "~0.4.2",
-    "grunt-urequire": "~0.6.0",
     "time-grunt": "~0.2.9",
     "load-grunt-tasks": "~0.3.0",
+    "grunt-urequire": "~0.6.0",
     "grunt-mocha": "~0.4.10",
-    "expect.js": "~0.2.0",
-    "mocha": "~1.17.1",
     "grunt-mocha-test": "~0.9.0",
-    "benchmark": "~1.0.0",
-    "grunt-contrib-jshint": "~0.8.0"
+    "grunt-contrib-jshint": "~0.8.0",
+    "grunt-contrib-copy": "~0.5.0",
+    "grunt-contrib-connect": "~0.7.0",
+    "grunt-shell": "~0.6.4",
+    "grunt-mocha-phantomjs": "~0.4.2",
+    "mocha": "~1.17.1",
+    "expect.js": "~0.2.0",
+    "mocha-phantomjs": "~3.3.2",
+    "benchmark": "~1.0.0"
   }
 }

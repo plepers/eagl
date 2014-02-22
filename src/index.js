@@ -1,10 +1,12 @@
 
 define(
   [
-    'eagl/objects/Object3D'
+    'eagl/objects/Object3D',
+    'eagl/core/Renderer'
   ],
   function(
-    Object3D
+    Object3D,
+    Rnederer
   ){
 
   var eagl = {

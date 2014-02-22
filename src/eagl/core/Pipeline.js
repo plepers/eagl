@@ -50,7 +50,9 @@ define(
 
   Pipeline.prototype = {
 
-
+    getHead : function(){
+      return this._threads[0]._rhead;
+    },
 
     addUnit : function( unit ){
 
