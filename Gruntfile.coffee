@@ -97,7 +97,6 @@ module.exports = (grunt) ->
         configFile: 'karma.conf.js'
         autoWatch: false
         singleRun: true
-        browsers: ['sl_chrome_OSX9']
 
 
     # --------------------

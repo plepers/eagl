@@ -2,19 +2,11 @@ language: node_js
 node_js:
 - '0.11'
 env:
-  matrix:
-  - SLIMERJSLAUNCHER=$(which firefox) DISPLAY=:99.0 PATH=$TRAVIS_BUILD_DIR/slimerjs:$PATH
   global:
   - secure: HkmIkkCjhlvqfTSlkIbGQxaoikjLuhiHOt+dcSp7x4NpgTfnfJmA08s9axeGX/ZWm91tlYiW2iKp1sOY5esJYSa5rtp8X5QjcF0Os2qv0VJM3JowlIOrqHChNdrR82oB5vlW/6AmQM9ZhKDL90C1avDDjOjW9iMRKP0684vT770=
   - secure: PEhL3G8MzPVzYq5Hz/dbseiUV2OlnQrw+QDS/CngWDSquXQqOPzMxTDMrAQKnAG0g5ef2EIvbaNUncq4z0KLUO7rMYYR9mr3tPE/CRy51ZUbgaSalBY7+f1e/XfABwVpTKhZyzLs3+DC1ycu33uxSoTCxtFhp7g4ri/1/DDoebU=
-addons:
-  firefox: '25.0'
+
 before_script:
-- sh -e /etc/init.d/xvfb start
-- echo 'Installing SlimerJS'
-- wget http://download.slimerjs.org/v0.9/0.9.0/slimerjs-0.9.0.zip
-- unzip slimerjs-0.9.0.zip
-- mv slimerjs-0.9.0 ./slimerjs
 - echo 'Installing Grunt'
 - npm install -g grunt-cli
 branches:
