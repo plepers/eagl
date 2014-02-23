@@ -23,7 +23,8 @@ require.config({
 require( [
     './spec/mat4',
     './spec/Object3D',
-    './spec/Scene'
+    './spec/Scene',
+    './spec/GLConfig'
   ],
   function( ){
     var runner
