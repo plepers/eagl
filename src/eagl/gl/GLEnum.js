@@ -130,21 +130,29 @@ define( function(){
     DEPTH_WRITEMASK                              : 0x0B72,
     DEPTH_CLEAR_VALUE                            : 0x0B73,
     DEPTH_FUNC                                   : 0x0B74,
+
     STENCIL_CLEAR_VALUE                          : 0x0B91,
+
     STENCIL_FUNC                                 : 0x0B92,
+
     STENCIL_FAIL                                 : 0x0B94,
     STENCIL_PASS_DEPTH_FAIL                      : 0x0B95,
     STENCIL_PASS_DEPTH_PASS                      : 0x0B96,
+
     STENCIL_REF                                  : 0x0B97,
     STENCIL_VALUE_MASK                           : 0x0B93,
+
     STENCIL_WRITEMASK                            : 0x0B98,
+
     STENCIL_BACK_FUNC                            : 0x8800,
     STENCIL_BACK_FAIL                            : 0x8801,
     STENCIL_BACK_PASS_DEPTH_FAIL                 : 0x8802,
     STENCIL_BACK_PASS_DEPTH_PASS                 : 0x8803,
+
     STENCIL_BACK_REF                             : 0x8CA3,
     STENCIL_BACK_VALUE_MASK                      : 0x8CA4,
     STENCIL_BACK_WRITEMASK                       : 0x8CA5,
+
     VIEWPORT                                     : 0x0BA2,
     SCISSOR_BOX                                  : 0x0C10,
     /*      SCISSOR_TEST */
@@ -416,6 +424,16 @@ define( function(){
     UNPACK_COLORSPACE_CONVERSION_WEBGL           : 0x9243,
     BROWSER_DEFAULT_WEBGL                        : 0x9244
   };
+
+  var map = {};
+  for( key in Enums ){
+    var i = Enums[key];
+    map[i] = key;
+  }
+
+  Enums.getString = function( i ){
+    return map[i];
+  }
 
   Object.freeze( Enums );
 
