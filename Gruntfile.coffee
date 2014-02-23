@@ -86,6 +86,19 @@ module.exports = (grunt) ->
           stderr: true
           failOnError: true
 
+    # KARMA TESTING
+    # ================
+    karma:
+      unit:
+        configFile: 'karma.conf.js'
+        singleRun: true
+
+      travis:
+        configFile: 'karma.conf.js'
+        autoWatch: false
+        singleRun: true
+        browsers: ['sl_chrome_OSX9']
+
 
     # --------------------
     # Connect
@@ -112,7 +125,5 @@ module.exports = (grunt) ->
 
   grunt.registerTask "test",
     [
-      'connect'
-      'shell:qunit-slimerjs'
-      'mocha_phantomjs'
+      'karma:travis'
     ]

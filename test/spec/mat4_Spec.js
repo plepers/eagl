@@ -1,8 +1,8 @@
 define(
   [
     'expect',
-    './aequal',
-    '../refs/mat4_mul_ref',
+    'spec/aequal',
+    'refs/mat4_mul_ref',
     'eagl/math/mat4'
   ],
   function( expect, aequal, mulRefs, mat4 ){
