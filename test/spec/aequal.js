@@ -22,11 +22,13 @@ define(
       //console.log( equal(a,b) );
       var eq = equal( a, b );
       if( !eq ){
-        console.log( '   '+[].join.call( a, ',' ) );
-        console.log( '   should be' );
-        console.log( '   '+[].join.call( b, ',' ) );
+        console.log(
+          '   '+[].join.call( a, ',' ) +'\n'
+          '   should be \n'+
+          '   '+[].join.call( b, ',' )
+        );
       }
-      expect( equal ).to.be.ok();
+      expect( eq ).to.be.ok();
     };
   }
 );
