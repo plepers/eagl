@@ -89,10 +89,6 @@ module.exports = (grunt) ->
     # KARMA TESTING
     # ================
     karma:
-      unit:
-        configFile: 'karma.conf.js'
-        singleRun: true
-
       travis:
         configFile: 'karma.conf.js'
         autoWatch: false

@@ -16,7 +16,7 @@ define(
       if( document != undefined ){
         var canvas = document.createElement( 'canvas' );
         if( canvas != undefined ){
-          var gl = canvas.getContext( 'experimental-webgl' );
+          var gl = canvas.getContext( 'webgl' ) || canvas.getContext( 'experimental-webgl' );
           if( gl != null )
             return true;
         }

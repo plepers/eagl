@@ -55,26 +55,54 @@ module.exports = function(config) {
 
     // define SL browsers
     customLaunchers: {
+
+      // OSX Maverick
+
       'SL_Chrome_OSX9': {
         base: 'SauceLabs',
         browserName: 'chrome',
         version: '31',
         platform: 'OS X 10.9'
       },
-      'SL_Chrome': {
-        base: 'SauceLabs',
-        browserName: 'chrome'
-      },
-      'SL_Firefox': {
+      'SL_Firefox_OSX9': {
         base: 'SauceLabs',
         browserName: 'firefox',
-        version: '26'
+        version: '26',
+        platform: 'OS X 10.9'
       },
       'SL_Safari': {
         base: 'SauceLabs',
         browserName: 'safari',
         platform: 'OS X 10.9',
         version: '7'
+      },
+
+      //Win 8.1
+      'SL_Chrome_WIN81': {
+        base: 'SauceLabs',
+        browserName: 'chrome',
+        version: '32',
+        platform: 'Windows 8.1'
+      },
+      'SL_Firefox_WIN81': {
+        base: 'SauceLabs',
+        browserName: 'firefox',
+        version: '27',
+        platform: 'Windows 8.1'
+      },
+
+      //Linux
+      'SL_Chrome_NIX': {
+        base: 'SauceLabs',
+        browserName: 'chrome',
+        version: '32',
+        platform: 'Linux'
+      },
+      'SL_Firefox_NIX': {
+        base: 'SauceLabs',
+        browserName: 'firefox',
+        version: '27',
+        platform: 'Linux'
       }
       // ,
       // 'SL_IE_11': {
