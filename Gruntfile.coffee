@@ -74,6 +74,18 @@ module.exports = (grunt) ->
     mocha_phantomjs:
       all: ['test/index.html']
 
+    mocha_slimerjs:
+      all: ['test/index.html']
+
+
+    shell:
+      'qunit-slimerjs':
+        command: './test/utils/run-slimerjs.sh http://localhost:' + CI_PORT + '/test/'
+        options:
+          stdout: true
+          stderr: true
+          failOnError: true
+
 
     # --------------------
     # Connect
@@ -100,5 +112,7 @@ module.exports = (grunt) ->
 
   grunt.registerTask "test",
     [
+      'connect'
+      'shell:qunit-slimerjs'
       'mocha_phantomjs'
     ]

@@ -26,12 +26,14 @@ require( [
     './spec/Scene'
   ],
   function( ){
-
+    var runner
     if (window.mochaPhantomJS) {
-      mochaPhantomJS.run();
+      runner = mochaPhantomJS.run();
     }
     else {
-      mocha.run();
+      runner = mocha.run();
     }
+    if( window.onMochaStart != undefined )
+      window.onMochaStart( runner );
   }
 );

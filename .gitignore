@@ -14,7 +14,7 @@ build
 
 npm-debug.log
 node_modules
-utils
+misc
 
 
 .DS_Store
