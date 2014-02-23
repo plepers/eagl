@@ -55,12 +55,33 @@ module.exports = function(config) {
 
     // define SL browsers
     customLaunchers: {
-      sl_chrome_OSX9: {
+      'SL_Chrome_OSX9': {
         base: 'SauceLabs',
         browserName: 'chrome',
         version: '31',
         platform: 'OS X 10.9'
-      }
+      },
+      'SL_Chrome': {
+        base: 'SauceLabs',
+        browserName: 'chrome'
+      },
+      'SL_Firefox': {
+        base: 'SauceLabs',
+        browserName: 'firefox',
+        version: '26'
+      },
+      'SL_Safari': {
+        base: 'SauceLabs',
+        browserName: 'safari',
+        platform: 'OS X 10.9',
+        version: '7'
+      },
+      'SL_IE_11': {
+        base: 'SauceLabs',
+        browserName: 'internet explorer',
+        platform: 'Windows 8.1',
+        version: '11'
+      },
     },
 
 
@@ -73,9 +94,7 @@ module.exports = function(config) {
     // - Safari (only Mac)
     // - PhantomJS
     // - IE (only Windows)
-    browsers: process.env.TRAVIS
-      ? [ 'sl_chrome_OSX9' ]
-      : [ 'Chrome', 'Firefox', 'PhantomJS' ],
+    browsers: [ 'Chrome', 'Firefox', 'PhantomJS' ],
 
 
     // If browser does not capture in given timeout [ms], kill it
@@ -88,4 +107,14 @@ module.exports = function(config) {
 
 
   });
+
+  if( process.env.TRAVIS ) {
+
+    var browsers = [];
+    for( browser in customLaunchers ){
+      browsers.push( browser );
+    }
+    config.browsers = browsers;
+
+  }
 };
