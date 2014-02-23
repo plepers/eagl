@@ -111,7 +111,7 @@ module.exports = function(config) {
   if( process.env.TRAVIS ) {
 
     var browsers = [];
-    for( browser in customLaunchers ){
+    for( browser in config.customLaunchers ){
       browsers.push( browser );
     }
     config.browsers = browsers;
