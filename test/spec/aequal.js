@@ -20,7 +20,13 @@ define(
 
     return function(a,b) {
       //console.log( equal(a,b) );
-      expect( equal(a,b) ).to.be.ok();
+      var eq = equal( a, b );
+      if( !eq ){
+        console.log( '   '+[].join.call( a, ',' ) );
+        console.log( '   should be' );
+        console.log( '   '+[].join.call( b, ',' ) );
+      }
+      expect( equal ).to.be.ok();
     };
   }
 );
