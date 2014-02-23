@@ -23,8 +23,8 @@ define(
       var eq = equal( a, b );
       if( !eq ){
         console.log(
-          '   '+[].join.call( a, ',' ) +'\n'
-          '   should be \n'+
+          '   '+[].join.call( a, ',' ) + '\n' +
+          '   should be \n' +
           '   '+[].join.call( b, ',' )
         );
       }
