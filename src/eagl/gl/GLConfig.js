@@ -57,37 +57,65 @@ stencil
         STENCIL_MASK_SET    = 1 << 9,
         STENCIL_B_FUNC_SET  = 1 << 10,
         STENCIL_B_OP_SET    = 1 << 11,
-        STENCIL_B_MASK_SET  = 1 << 12;
+        STENCIL_B_MASK_SET  = 1 << 12,
 
 
-  _DEFAULT_SET = 1011;
+        DAT_MASKS = [
+            BLEND_EQ_SET,
+            BLEND_FUNC_SET,
+            BLEND_FUNC_SET,
+            BLEND_EQ_A_SET,
+            BLEND_FUNC_A_SET,
+            BLEND_FUNC_A_SET,
+            DEPTH_FUNC_SET,
+            CULL_MODE_SET,
+            FACE_DIR_SET,
+            STENCIL_FUNC_SET,
+            STENCIL_FUNC_SET,
+            STENCIL_FUNC_SET,
+            STENCIL_OP_SET,
+            STENCIL_OP_SET,
+            STENCIL_OP_SET,
+            STENCIL_MASK_SET,
+            STENCIL_B_FUNC_SET,
+            STENCIL_B_FUNC_SET,
+            STENCIL_B_FUNC_SET,
+            STENCIL_B_OP_SET,
+            STENCIL_B_OP_SET,
+            STENCIL_B_OP_SET,
+            STENCIL_B_MASK_SET
+          ],
 
-  _DEFAULT_STATE = new Uint16Array([
-    32774,   // BLEND_EQ_C            :   FUNC_ADD
-    0,       // BLEND_FUNC_C_DST      :   ZERO
-    1,       // BLEND_FUNC_C_SRC      :   ONE
-    0,       // BLEND_EQ_A            :   --
-    0,       // BLEND_FUNC_A_DST      :   --
-    0,       // BLEND_FUNC_A_SRC      :   --
-    513,     // DEPTH_FUNC            :   gl.LESS
-    1029,    // CULL_MODE             :   gl.BACK
-    2305,    // FACE_DIR              :   gl.CCW
-    519,     // STENCIL_FUNC          :   gl.ALWAYS
-    0,       // STENCIL_REF           :   0x0
-    65535,   // STENCIL_VALUE_MASK    :   0xFFFF
-    65535,   // STENCIL_WRITEMASK     :   0xFFFF
-    7680,    // STENCIL_OP_FAIL       :   gl.KEEP
-    7680,    // STENCIL_OP_ZFAIL      :   gl.KEEP
-    7680,    // STENCIL_OP_ZPASS      :   gl.KEEP
-    0,       // STENCIL_B_FUNC        :   --
-    0,       // STENCIL_B_REF         :   --
-    0,       // STENCIL_B_VALUE_MASK  :   --
-    0,       // STENCIL_B_WRITEMASK   :   --
-    0,       // STENCIL_B_OP_FAIL     :   --
-    0,       // STENCIL_B_OP_ZFAIL    :   --
-    0,       // STENCIL_B_OP_ZPASS    :   --
-    0        // SCISSOR_TEST          :   gl.NONE
-  ]);
+        SETS_LEN = 13,
+
+        _DEFAULT_SET = 1011,
+
+        _DEFAULT_STATE = new Uint16Array([
+          32774,   // BLEND_EQ_C            :   FUNC_ADD
+          0,       // BLEND_FUNC_C_DST      :   ZERO
+          1,       // BLEND_FUNC_C_SRC      :   ONE
+          0,       // BLEND_EQ_A            :   --
+          0,       // BLEND_FUNC_A_DST      :   --
+          0,       // BLEND_FUNC_A_SRC      :   --
+          513,     // DEPTH_FUNC            :   gl.LESS
+          1029,    // CULL_MODE             :   gl.BACK
+          2305,    // FACE_DIR              :   gl.CCW
+          519,     // STENCIL_FUNC          :   gl.ALWAYS
+          0,       // STENCIL_REF           :   0x0
+          65535,   // STENCIL_VALUE_MASK    :   0xFFFF
+          65535,   // STENCIL_WRITEMASK     :   0xFFFF
+          7680,    // STENCIL_OP_FAIL       :   gl.KEEP
+          7680,    // STENCIL_OP_ZFAIL      :   gl.KEEP
+          7680,    // STENCIL_OP_ZPASS      :   gl.KEEP
+          0,       // STENCIL_B_FUNC        :   --
+          0,       // STENCIL_B_REF         :   --
+          0,       // STENCIL_B_VALUE_MASK  :   --
+          0,       // STENCIL_B_WRITEMASK   :   --
+          0,       // STENCIL_B_OP_FAIL     :   --
+          0,       // STENCIL_B_OP_ZFAIL    :   --
+          0,       // STENCIL_B_OP_ZPASS    :   --
+          0        // SCISSOR_TEST          :   gl.NONE
+        ]);
 
 
 
@@ -98,7 +126,7 @@ stencil
   //  ╚═╗ ║ ╠═╣║  ╠╩╗
   //  ╚═╝ ╩ ╩ ╩╚═╝╩ ╩
 
-  MIN_ALLOC = 32
+  const MIN_ALLOC = 32
 
   function ConfigStack(){
     this.currentCongig = new GLConfig();
@@ -113,16 +141,29 @@ stencil
 
     push : function( cfg ){
       var ptr = this._ptr,
-          set = this._sets[ptr++];
+          sset = this._sets[ptr++],
+          lset=  cfg._set,
+          sptr, sdat, ldat, i;
 
       if( ptr == this._size ){
         this._grow();
       }
 
-      this._stack.set( cfg._dat, ptr*LEN );
-      this._sets[ptr] = set | cfg._set;
-
+      this._sets[ptr] = sset | lset;
       this._ptr = ptr;
+      sptr = ptr*LEN;
+
+      sdat = this._stack;
+      ldat = cfg._dat;
+
+      for( i = 0; i < LEN; i++ )
+      {
+        if( 0 !== ( lset & DAT_MASKS[ i ] ) )
+        {
+          sdat[ sptr+i ] = ldat[ i ];
+        }
+      }
+
     },
 
     pop : function() {
@@ -170,15 +211,64 @@ stencil
           dat = this._dat,
           i;
 
+
+      // Blend Equation
+
       i = set & (BLEND_EQ_SET|BLEND_EQ_A_SET);
-      if ( i === 0 )
-        gl.disable( gl.BLEND );
-      else {
-        gl.enable( gl.BLEND );
+
+      if ( i !== 0 ) {
 
         ( i === (BLEND_EQ_SET|BLEND_EQ_A_SET) )
           ? gl.blendEquationSeparate( dat[ BLEND_EQ_C ], dat[ BLEND_EQ_A ] )
           : gl.blendEquation( dat[ BLEND_EQ_C ] );
+
+      }
+
+
+      // Blend Function
+      i = set & (BLEND_FUNC_SET|BLEND_FUNC_A_SET);
+
+      if ( i === 0 )
+        gl.disable( gl.BLEND );
+
+      else {
+        gl.enable( gl.BLEND );
+
+        ( i === (BLEND_FUNC_SET|BLEND_FUNC_A_SET) )
+          ? gl.blendFuncSeparate( dat[ BLEND_FUNC_C_SRC ], dat[ BLEND_FUNC_C_DST ], dat[ BLEND_FUNC_A_SRC ], dat[ BLEND_FUNC_A_DST ] )
+          : gl.blendFunc( dat[ BLEND_FUNC_C_SRC ], dat[ BLEND_FUNC_C_DST ] );
+      }
+
+
+      // Blend Function
+      if ( set & DEPTH_FUNC_SET === DEPTH_FUNC_SET ){
+        gl.depthFunc( dat[ DEPTH_FUNC ] );
+      }
+      // culling mode (front/back/front_and_back)
+      if ( set & CULL_MODE === CULL_MODE ){
+        gl.cullFace( dat[ CULL_MODE ] );
+      }
+      // face direction (cw/ccw)
+      if ( set & FACE_DIR === FACE_DIR ){
+        gl.frontFace( dat[ FACE_DIR ] );
+      }
+
+
+     // Stencil Function
+      i = set & (STENCIL_FUNC_SET|STENCIL_B_FUNC_SET);
+
+      if ( i === 0 )
+        gl.disable( gl.STENCIL_TEST );
+
+      else {
+        gl.enable( gl.STENCIL_TEST );
+
+        if( i === (STENCIL_FUNC_SET|STENCIL_B_FUNC_SET) ){
+          gl.stencilFuncSeparate( gl.FRONT, dat[ STENCIL_FUNC ], dat[ STENCIL_REF ], dat[ STENCIL_VALUE_MASK ] );
+          gl.stencilFuncSeparate( gl.BACK, dat[ STENCIL_B_FUNC ], dat[ STENCIL_B_REF ], dat[ STENCIL_B_VALUE_MASK ] );
+        } else {
+          gl.stencilFunc( dat[ STENCIL_FUNC ], dat[ STENCIL_REF ], dat[ STENCIL_VALUE_MASK ] );
+        }
       }
 
     },

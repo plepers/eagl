@@ -101,6 +101,14 @@ define(
           expect( cfg._set ).to.be.equal( bin( '010' ) );
         });
 
+        it( "should setup gl context", function(){
+          var cfg = new GLConfig();
+          cfg.toDefault();
+          cfg.setBlendFunction( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA );
+          cfg.setupGL( gl );
+          compareFromGl( cfg, gl );
+        });
+
       });
 
 
@@ -154,7 +162,112 @@ define(
         });
 
 
+        it( "should setup gl context", function(){
+          var cfg = new GLConfig();
+          cfg.toDefault();
+          cfg.setDepthFunc( gl.GREATER );
+          cfg.setupGL( gl );
+          compareFromGl( cfg, gl );
+
+          cfg.setDepthFunc( gl.LESS );
+          cfg.setupGL( gl );
+          compareFromGl( cfg, gl );
+        });
+
       });
+
+
+
+      describe( "setCulling", function(){
+
+        it( "should fill correct set", function(){
+          var cfg = new GLConfig();
+          cfg.setCulling( gl.FRONT_AND_BACK );
+          expect( cfg._set ).to.be.equal( bin( '100000' ) );
+        });
+
+
+        it( "should fill correct cfg", function(){
+          var cfg = new GLConfig();
+          cfg.setCulling( gl.FRONT_AND_BACK );
+          expect( cfg._dat[7] ).to.be.equal( gl.FRONT_AND_BACK );
+        });
+
+
+        it( "should setup gl context", function(){
+          var cfg = new GLConfig();
+          cfg.toDefault();
+          cfg.setCulling( gl.FRONT_AND_BACK );
+          cfg.setupGL( gl );
+          compareFromGl( cfg, gl );
+          cfg.setCulling( gl.BACK );
+          cfg.setupGL( gl );
+          compareFromGl( cfg, gl );
+        });
+
+      });
+
+
+
+      describe( "setFaceDir", function(){
+
+        it( "should fill correct set", function(){
+          var cfg = new GLConfig();
+          cfg.setFaceDir( gl.CW );
+          expect( cfg._set ).to.be.equal( bin( '1000000' ) );
+        });
+
+
+        it( "should fill correct cfg", function(){
+          var cfg = new GLConfig();
+          cfg.setFaceDir( gl.CW );
+          expect( cfg._dat[8] ).to.be.equal( gl.CW );
+        });
+
+
+        it( "should setup gl context", function(){
+          var cfg = new GLConfig();
+          cfg.toDefault();
+
+          cfg.setFaceDir( gl.CW );
+          cfg.setupGL( gl );
+          compareFromGl( cfg, gl );
+
+          cfg.setFaceDir( gl.CCW );
+          cfg.setupGL( gl );
+          compareFromGl( cfg, gl );
+        });
+
+      });
+
+      describe( "setStencilFunc", function(){
+
+        it( "should fill correct set", function(){
+          var cfg = new GLConfig();
+          cfg.setStencilFunc( gl.GEQUAL, 42, 5 );
+          expect( cfg._set ).to.be.equal( bin( '10000000' ) );
+        });
+
+
+        it( "should fill correct cfg", function(){
+          var cfg = new GLConfig();
+          cfg.setStencilFunc( gl.GEQUAL, 42, 5 );
+          expect( cfg._dat[9] ).to.be.equal( gl.GEQUAL );
+          expect( cfg._dat[10] ).to.be.equal( 42 );
+          expect( cfg._dat[11] ).to.be.equal( 5 );
+        });
+
+
+        it( "should setup gl context", function(){
+          var cfg = new GLConfig();
+          cfg.toDefault();
+          cfg.setStencilFunc( gl.GEQUAL, 42, 5 );
+          cfg.setupGL( gl );
+          compareFromGl( cfg, gl );
+        });
+
+      });
+
 
       describe( "xx", function(){
 
