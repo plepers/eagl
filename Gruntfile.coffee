@@ -24,8 +24,8 @@ module.exports = (grunt) ->
       test:     "test"
 
 
-    # --------------------
     # URequire
+    # ================
 
     urequire :
       umd:
@@ -60,16 +60,26 @@ module.exports = (grunt) ->
         allNodeRequires: yes
 
 
-    # --------------------
     # JSHint
+    # ================
 
     jshint:
       all: [
         'src/**/*.js'
       ]
 
-    # --------------------
+
+    # WATCHER
+    # ================
+    watch:
+      # run unit tests with karma (server needs to be already running)
+      karma:
+        files: ['src/**/*.js', 'test/**/*.js']
+        tasks: ['karma:dev:run']
+
+
     # Mocha
+    # ================
 
     mocha_phantomjs:
       all: ['test/index.html']
@@ -89,14 +99,19 @@ module.exports = (grunt) ->
     # KARMA TESTING
     # ================
     karma:
+
+      dev:
+        configFile: 'karma.conf.js'
+        background : yes
+        browsers: ['Chrome']
+
       travis:
         configFile: 'karma.conf.js'
-        autoWatch: false
         singleRun: true
 
 
-    # --------------------
     # Connect
+    # ================
 
     connect:
       server:
@@ -105,20 +120,25 @@ module.exports = (grunt) ->
           base: '.'
 
 
-  grunt.registerTask "build-all",
-    [
-      "jshint"
-      "urequire:node"
-      "urequire:combined"
-    ]
+  grunt.registerTask "build-all", [
+    "jshint"
+    "urequire:node"
+    "urequire:combined"
+  ]
 
-  grunt.registerTask "build",
-    [
-      "jshint"
-      "urequire:node"
-    ]
+  grunt.registerTask "build", [
+    "jshint"
+    "urequire:node"
+  ]
 
-  grunt.registerTask "test",
-    [
-      'karma:travis'
-    ]
+  grunt.registerTask "test", (target) ->
+    if target is "alive"
+      grunt.task.run([
+        'karma:dev:start'
+        'watch:karma'
+      ])
+    else
+      grunt.task.run([
+        "karma:travis"
+      ])
+
