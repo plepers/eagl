@@ -86,9 +86,13 @@ module.exports = (grunt) ->
     # ================
     watch:
       # run unit tests with karma (server needs to be already running)
+      sources:
+        files: ['src/**/*.js']
+        tasks: ['uglify:sources']
+
       karma:
         files: ['src/**/*.js', 'test/**/*.js']
-        tasks: ['karma:dev:run']
+        tasks: [ 'uglify:sources', 'karma:dev:run']
 
 
     # Mocha
@@ -145,13 +149,16 @@ module.exports = (grunt) ->
   ]
 
   grunt.registerTask "test", (target) ->
+    tasks = ['uglify:sources']
     if target is "alive"
-      grunt.task.run([
+      tasks = tasks.concat [
         'karma:dev:start'
         'watch:karma'
-      ])
+      ]
     else
-      grunt.task.run([
+      tasks = tasks.concat [
         "karma:travis"
-      ])
+      ]
+
+    grunt.task.run tasks
 

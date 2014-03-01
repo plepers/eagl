@@ -11,7 +11,7 @@ requirejs.config({
     baseUrl: '/base/test',
 
     paths: {
-      eagl: '../src/eagl',
+      eagl: '../.tmp/src/eagl',
       expect: '../node_modules/expect.js/expect'
     },
 

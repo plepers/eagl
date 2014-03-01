@@ -13,7 +13,7 @@ module.exports = function(config) {
     files: [
 
       {pattern: 'node_modules/expect.js/**/*.js', included: false},
-      {pattern: 'src/**/*.js', included: false},
+      //{pattern: 'src/**/*.js', included: false},
       {pattern: '.tmp/src/**/*.js', included: false},
       {pattern: 'test/spec/**/*.js', included: false},
       {pattern: 'test/refs/**/*.js', included: false},
