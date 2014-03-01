@@ -14,7 +14,7 @@ define(
       return parseInt( str, 2 );
     };
 
-    var hasWebgl = function(){
+    var hasWebgl = (function(){
       if( document != undefined ){
         var canvas = document.createElement( 'canvas' );
         if( canvas != undefined ){
@@ -24,12 +24,17 @@ define(
         }
       }
       return false;
+    })();
+
+    var itGl = function(desc, fn){
+      if( hasWebgl )
+        it( desc, fn );
     };
 
     var equalConfig = function( cfgA, cfgB ){
       aequal( cfgA._dat, cfgB._dat );
       expect( cfgA._set ).to.be.equal( cfgB._set );
-    }
+    };
 
     var compareFromGl = function( cfg, gl ){
       var ref = new GLConfig();
@@ -49,11 +54,6 @@ define(
 
     describe( "gl - GLConfig", function(){
 
-      if( ! hasWebgl() ) {
-        console.log( "no webgl" );
-        return;
-      }
-
       beforeEach(function(){
 
         gl = document.createElement( 'canvas' ).getContext( 'experimental-webgl' );
@@ -65,7 +65,7 @@ define(
       describe( "fromGL / toDefault", function(){
 
 
-        it( "should fullfill a default config", function(){
+        itGl( "should fullfill a default config", function(){
 
           var cfg = new GLConfig();
           cfg.fromGL( gl );
@@ -101,7 +101,7 @@ define(
           expect( cfg._set ).to.be.equal( bin( '010' ) );
         });
 
-        it( "should setup gl context", function(){
+        itGl( "should setup gl context", function(){
           var cfg = new GLConfig();
           cfg.toDefault();
           cfg.setBlendFunction( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA );
@@ -137,7 +137,7 @@ define(
           expect( cfg._set ).to.be.equal( bin( '1010' ) );
         });
 
-        it( "should setup gl context", function(){
+        itGl( "should setup gl context", function(){
           var cfg = new GLConfig();
           cfg.toDefault();
           cfg.setBlendFunctionSeparate( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ZERO );
@@ -170,7 +170,7 @@ define(
           expect( cfg._set ).to.be.equal( bin( '001' ) );
         });
 
-        it( "should setup gl context", function(){
+        itGl( "should setup gl context", function(){
           var cfg = new GLConfig();
           cfg.toDefault();
           cfg.setBlendEquation( gl.FUNC_SUBTRACT );
@@ -203,7 +203,7 @@ define(
           expect( cfg._set ).to.be.equal( bin( '101' ) );
         });
 
-        it( "should setup gl context", function(){
+        itGl( "should setup gl context", function(){
           var cfg = new GLConfig();
           cfg.toDefault();
           cfg.setBlendEquationSeparate( gl.FUNC_SUBTRACT, gl.FUNC_ADD );
@@ -230,7 +230,7 @@ define(
         });
 
 
-        it( "should setup gl context", function(){
+        itGl( "should setup gl context", function(){
           var cfg = new GLConfig();
           cfg.toDefault();
           cfg.setDepthFunc( gl.GREATER );
@@ -262,7 +262,7 @@ define(
         });
 
 
-        it( "should setup gl context", function(){
+        itGl( "should setup gl context", function(){
           var cfg = new GLConfig();
           cfg.toDefault();
           cfg.setCulling( gl.FRONT_AND_BACK );
@@ -293,7 +293,7 @@ define(
         });
 
 
-        it( "should setup gl context", function(){
+        itGl( "should setup gl context", function(){
           var cfg = new GLConfig();
           cfg.toDefault();
 
@@ -326,7 +326,7 @@ define(
         });
 
 
-        it( "should setup gl context", function(){
+        itGl( "should setup gl context", function(){
           var cfg = new GLConfig();
           cfg.toDefault();
           cfg.setStencilFunc( gl.GEQUAL, 42, 5 );
@@ -355,7 +355,7 @@ define(
         });
 
 
-        it( "should setup gl context", function(){
+        itGl( "should setup gl context", function(){
           var cfg = new GLConfig();
           cfg.toDefault();
           cfg.setStencilOp( gl.DECR_WRAP, gl.REPLACE, gl.INVERT );
@@ -382,7 +382,7 @@ define(
         });
 
 
-        it( "should setup gl context", function(){
+        itGl( "should setup gl context", function(){
           var cfg = new GLConfig();
           cfg.toDefault();
           cfg.setStencilMask( 9 );
@@ -415,7 +415,7 @@ define(
         });
 
 
-        it( "should setup gl context", function(){
+        itGl( "should setup gl context", function(){
           var cfg = new GLConfig();
           cfg.toDefault();
           cfg.setStencilFuncSeparate( gl.GEQUAL, 42, 5, gl.NOTEQUAL, 20, 22 );
@@ -447,7 +447,7 @@ define(
         });
 
 
-        it( "should setup gl context", function(){
+        itGl( "should setup gl context", function(){
           var cfg = new GLConfig();
           cfg.toDefault();
           cfg.setStencilOpSeparate( gl.DECR_WRAP, gl.REPLACE, gl.INVERT, gl.INVERT, gl.DECR_WRAP, gl.REPLACE );
@@ -475,7 +475,7 @@ define(
         });
 
 
-        it( "should setup gl context", function(){
+        itGl( "should setup gl context", function(){
           var cfg = new GLConfig();
           cfg.toDefault();
           cfg.setStencilMaskSeparate( 9, 15 );
@@ -486,14 +486,6 @@ define(
       });
 
 
-
-      describe( "xx", function(){
-
-        it( "xx", function(){
-
-        });
-
-      });
 
     });
 
