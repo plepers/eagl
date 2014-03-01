@@ -4,6 +4,8 @@ define( function( ){
 
 /*
 
+infos : (<0|foo>) expressions help uglifyjs2 optimizations (resolve/inline constants)
+
 blend func
 
 depth test
@@ -61,29 +63,29 @@ stencil
 
 
         DAT_MASKS = [
-            BLEND_EQ_SET,
-            BLEND_FUNC_SET,
-            BLEND_FUNC_SET,
-            BLEND_EQ_A_SET,
-            BLEND_FUNC_A_SET,
-            BLEND_FUNC_A_SET,
-            DEPTH_FUNC_SET,
-            CULL_MODE_SET,
-            FACE_DIR_SET,
-            STENCIL_FUNC_SET,
-            STENCIL_FUNC_SET,
-            STENCIL_FUNC_SET,
-            STENCIL_OP_SET,
-            STENCIL_OP_SET,
-            STENCIL_OP_SET,
-            STENCIL_MASK_SET,
-            STENCIL_B_FUNC_SET,
-            STENCIL_B_FUNC_SET,
-            STENCIL_B_FUNC_SET,
-            STENCIL_B_OP_SET,
-            STENCIL_B_OP_SET,
-            STENCIL_B_OP_SET,
-            STENCIL_B_MASK_SET
+            BLEND_EQ_SET|0,
+            BLEND_FUNC_SET|0,
+            BLEND_FUNC_SET|0,
+            BLEND_EQ_A_SET|0,
+            BLEND_FUNC_A_SET|0,
+            BLEND_FUNC_A_SET|0,
+            DEPTH_FUNC_SET|0,
+            CULL_MODE_SET|0,
+            FACE_DIR_SET|0,
+            STENCIL_FUNC_SET|0,
+            STENCIL_FUNC_SET|0,
+            STENCIL_FUNC_SET|0,
+            STENCIL_OP_SET|0,
+            STENCIL_OP_SET|0,
+            STENCIL_OP_SET|0,
+            STENCIL_MASK_SET|0,
+            STENCIL_B_FUNC_SET|0,
+            STENCIL_B_FUNC_SET|0,
+            STENCIL_B_FUNC_SET|0,
+            STENCIL_B_OP_SET|0,
+            STENCIL_B_OP_SET|0,
+            STENCIL_B_OP_SET|0,
+            STENCIL_B_MASK_SET|0
           ],
 
         SETS_LEN = 13,
@@ -130,8 +132,8 @@ stencil
 
   function ConfigStack(){
     this.currentCongig = new GLConfig();
-    this._stack = new Uint16Array( LEN * MIN_ALLOC );
-    this._sets = new Uint16Array( MIN_ALLOC );
+    this._stack = new Uint16Array( (LEN * MIN_ALLOC)|0 );
+    this._sets = new Uint16Array( MIN_ALLOC|0 );
     this._size = MIN_ALLOC;
     this._ptr = 0;
   }
@@ -151,16 +153,16 @@ stencil
 
       this._sets[ptr] = sset | lset;
       this._ptr = ptr;
-      sptr = ptr*LEN;
+      sptr = ptr*(0|LEN);
 
       sdat = this._stack;
       ldat = cfg._dat;
 
-      for( i = 0; i < LEN; i++ )
+      for( i = 0; i < (LEN|0); i++ )
       {
         if( 0 !== ( lset & DAT_MASKS[ i ] ) )
         {
-          sdat[ sptr+i ] = ldat[ i ];
+          sdat[ Sptr+i ] = ldat[ i ];
         }
       }
 
@@ -172,7 +174,7 @@ stencil
 
     _grow : function(){
       var s      = this._size << 1,
-          stack  = new Uint16Array( s * LEN ),
+          stack  = new Uint16Array( s * (0|LEN) ),
           sets   = new Uint16Array( s );
 
       stack.set(  this._stack, 0 );
@@ -195,7 +197,7 @@ stencil
   };
 
   function GLConfig(){
-    this._dat = new Uint16Array( LEN );
+    this._dat = new Uint16Array( 0|LEN );
     this._set = 0;
   }
 
@@ -219,8 +221,8 @@ stencil
       if ( i !== 0 ) {
 
         ( i === (BLEND_EQ_SET|BLEND_EQ_A_SET) )
-          ? gl.blendEquationSeparate( dat[ BLEND_EQ_C ], dat[ BLEND_EQ_A ] )
-          : gl.blendEquation( dat[ BLEND_EQ_C ] );
+          ? gl.blendEquationSeparate( dat[ 0|BLEND_EQ_C ], dat[ 0|BLEND_EQ_A ] )
+          : gl.blendEquation( dat[ 0|BLEND_EQ_C ] );
 
       }
 
@@ -235,22 +237,22 @@ stencil
         gl.enable( gl.BLEND );
 
         ( i === (BLEND_FUNC_SET|BLEND_FUNC_A_SET) )
-          ? gl.blendFuncSeparate( dat[ BLEND_FUNC_C_SRC ], dat[ BLEND_FUNC_C_DST ], dat[ BLEND_FUNC_A_SRC ], dat[ BLEND_FUNC_A_DST ] )
-          : gl.blendFunc( dat[ BLEND_FUNC_C_SRC ], dat[ BLEND_FUNC_C_DST ] );
+          ? gl.blendFuncSeparate( dat[ 0|BLEND_FUNC_C_SRC ], dat[ 0|BLEND_FUNC_C_DST ], dat[ 0|BLEND_FUNC_A_SRC ], dat[ 0|BLEND_FUNC_A_DST ] )
+          : gl.blendFunc( dat[ 0|BLEND_FUNC_C_SRC ], dat[ 0|BLEND_FUNC_C_DST ] );
       }
 
 
       // Blend Function
       if ( set & DEPTH_FUNC_SET === DEPTH_FUNC_SET ){
-        gl.depthFunc( dat[ DEPTH_FUNC ] );
+        gl.depthFunc( dat[ 0|DEPTH_FUNC ] );
       }
       // culling mode (front/back/front_and_back)
       if ( set & CULL_MODE === CULL_MODE ){
-        gl.cullFace( dat[ CULL_MODE ] );
+        gl.cullFace( dat[ 0|CULL_MODE ] );
       }
       // face direction (cw/ccw)
       if ( set & FACE_DIR === FACE_DIR ){
-        gl.frontFace( dat[ FACE_DIR ] );
+        gl.frontFace( dat[ 0|FACE_DIR ] );
       }
 
 
@@ -264,16 +266,46 @@ stencil
         gl.enable( gl.STENCIL_TEST );
 
         if( i === (STENCIL_FUNC_SET|STENCIL_B_FUNC_SET) ){
-          gl.stencilFuncSeparate( gl.FRONT, dat[ STENCIL_FUNC ], dat[ STENCIL_REF ], dat[ STENCIL_VALUE_MASK ] );
-          gl.stencilFuncSeparate( gl.BACK, dat[ STENCIL_B_FUNC ], dat[ STENCIL_B_REF ], dat[ STENCIL_B_VALUE_MASK ] );
+          gl.stencilFuncSeparate( gl.FRONT, dat[ 0|STENCIL_FUNC ], dat[ 0|STENCIL_REF ], dat[ 0|STENCIL_VALUE_MASK ] );
+          gl.stencilFuncSeparate( gl.BACK, dat[ 0|STENCIL_B_FUNC ], dat[ 0|STENCIL_B_REF ], dat[ 0|STENCIL_B_VALUE_MASK ] );
         } else {
-          gl.stencilFunc( dat[ STENCIL_FUNC ], dat[ STENCIL_REF ], dat[ STENCIL_VALUE_MASK ] );
+          gl.stencilFunc( dat[ 0|STENCIL_FUNC ], dat[ 0|STENCIL_REF ], dat[ 0|STENCIL_VALUE_MASK ] );
         }
       }
+
+      // Stencil Op
+      i = set & (STENCIL_OP_SET|STENCIL_B_OP_SET);
+
+      if ( i !== 0 ){
+
+        if( i === (STENCIL_OP_SET|STENCIL_B_OP_SET) ){
+          gl.stencilOpSeparate( gl.FRONT, dat[ 0|STENCIL_OP_FAIL ], dat[ 0|STENCIL_OP_ZFAIL ], dat[ 0|STENCIL_OP_ZPASS ] );
+          gl.stencilOpSeparate( gl.BACK, dat[ 0|STENCIL_B_OP_FAIL ], dat[ 0|STENCIL_B_OP_ZFAIL ], dat[ 0|STENCIL_B_OP_ZPASS ]  );
+        } else {
+          gl.stencilOp( dat[ 0|STENCIL_OP_FAIL ], dat[ 0|STENCIL_OP_ZFAIL ], dat[ 0|STENCIL_OP_ZPASS ] );
+        }
+      }
+
+
+      // Stencil Op
+      i = set & (STENCIL_MASK_SET|STENCIL_B_MASK_SET);
+
+      if ( i !== 0 ){
+
+        if( i === (STENCIL_MASK_SET|STENCIL_B_MASK_SET) ){
+          gl.stencilMaskSeparate( gl.FRONT, dat[ 0|STENCIL_WRITEMASK ] );
+          gl.stencilMaskSeparate( gl.BACK, dat[ 0|STENCIL_B_WRITEMASK] );
+        } else {
+          gl.stencilMask( dat[ 0|STENCIL_WRITEMASK ] );
+        }
+      }
+
 
     },
 
 
+
+    // todo refator -> straight copy to dat and set
     fromGL : function( gl ){
       this._set = 0;
 
@@ -325,39 +357,49 @@ stencil
       }
 
 
-      this.setStencilFunc(
-        stencilFunc,
-        stencilRef,
-        stencilValueMask
-      );
       if( stencilFunc      !== stencilBFunc     ||
           stencilRef       !== stencilBRef      ||
           stencilValueMask !== stencilBValueMask ) {
-        this.setStencilFuncBack(
+        this.setStencilFuncSeparate(
+          stencilFunc,
+          stencilRef,
+          stencilValueMask,
           stencilBFunc,
           stencilBRef,
           stencilBValueMask
         );
+      } else {
+        this.setStencilFunc(
+          stencilFunc,
+          stencilRef,
+          stencilValueMask
+        );
+
       }
 
-      this.setStencilOp(
-        stencilOpFail,
-        stencilOpZfail,
-        stencilOpZpass
-      );
       if( stencilOpFail  !== stencilBOpFail   ||
           stencilOpZfail !== stencilBOpZfail  ||
           stencilOpZpass !== stencilBOpZpass ) {
-        this.setStencilOpBack(
+        this.setStencilOpSeparate(
+          stencilOpFail,
+          stencilOpZfail,
+          stencilOpZpass,
           stencilBOpFail,
           stencilBOpZfail,
           stencilBOpZpass
         );
+      } else {
+        this.setStencilOp(
+          stencilOpFail,
+          stencilOpZfail,
+          stencilOpZpass
+        );
       }
 
-      this.setStencilMask( stencilWriteMask );
       if( stencilWriteMask !== stencilBWriteMask ){
-        this.setStencilMaskBack( stencilBWriteMask );
+        this.setStencilMaskSeparate( stencilWriteMask, stencilBWriteMask );
+      } else {
+        this.setStencilMask( stencilWriteMask );
       }
 
 
@@ -391,9 +433,9 @@ stencil
         SRC_ALPHA_SATURATE
     */
     setBlendFunction : function( src, dst ){
-      this._dat[ BLEND_FUNC_C_SRC ] = src;
-      this._dat[ BLEND_FUNC_C_DST ] = dst;
-      this._set = this._set & ~BLEND_FUNC_A_SET | BLEND_FUNC_SET;
+      this._dat[ 0|BLEND_FUNC_C_SRC ] = src;
+      this._dat[ 0|BLEND_FUNC_C_DST ] = dst;
+      this._set = this._set & ~BLEND_FUNC_A_SET | (~~BLEND_FUNC_SET);
     },
 
     /*
@@ -409,16 +451,16 @@ stencil
         BLEND_COLOR
     */
     setBlendFunctionSeparate: function( srcRgb, dstRgb, srcAlpha, dstAlpha ){
-      this._dat[ BLEND_FUNC_C_SRC ] = srcRgb;
-      this._dat[ BLEND_FUNC_C_DST ] = dstRgb;
-      this._dat[ BLEND_FUNC_A_SRC ] = srcAlpha;
-      this._dat[ BLEND_FUNC_A_DST ] = dstAlpha;
+      this._dat[ 0|BLEND_FUNC_C_SRC ] = srcRgb;
+      this._dat[ 0|BLEND_FUNC_C_DST ] = dstRgb;
+      this._dat[ 0|BLEND_FUNC_A_SRC ] = srcAlpha;
+      this._dat[ 0|BLEND_FUNC_A_DST ] = dstAlpha;
       this._set |= BLEND_FUNC_SET | BLEND_FUNC_A_SET;
     },
 
     setBlendEquation : function( eq ){
-      this._dat[ BLEND_EQ_C ] = eq;
-      this._set = this._set & ~BLEND_EQ_A_SET | BLEND_EQ_SET;
+      this._dat[ 0|BLEND_EQ_C ] = eq;
+      this._set = this._set & ~BLEND_EQ_A_SET | (~~BLEND_EQ_SET);
     },
 
     /*
@@ -428,8 +470,8 @@ stencil
         BLEND_EQUATION_ALPHA
     */
     setBlendEquationSeparate : function( rgbEq, alphaEq ){
-      this._dat[ BLEND_EQ_C] = rgbEq;
-      this._dat[ BLEND_EQ_A ] = alphaEq;
+      this._dat[ 0|BLEND_EQ_C] = rgbEq;
+      this._dat[ 0|BLEND_EQ_A ] = alphaEq;
       this._set |= BLEND_EQ_SET | BLEND_EQ_A_SET;
     },
 
@@ -448,8 +490,8 @@ stencil
 
     */
     setDepthFunc : function( func ){
-      this._dat[ DEPTH_FUNC ] = func;
-      this._set |= DEPTH_FUNC_SET;
+      this._dat[ 0|DEPTH_FUNC ] = func;
+      this._set |= DEPTH_FUNC_SET|0;
     },
 
     /*
@@ -459,8 +501,8 @@ stencil
         FRONT_AND_BACK
     */
     setCulling : function( mode ){
-      this._dat[ CULL_MODE ] = mode;
-      this._set |= CULL_MODE_SET;
+      this._dat[ 0|CULL_MODE ] = mode;
+      this._set |= CULL_MODE_SET|0;
     },
 
 
@@ -470,52 +512,58 @@ stencil
         CCW
     */
     setFaceDir : function( dir ){
-      this._dat[ FACE_DIR ] = dir;
-      this._set |= FACE_DIR_SET;
+      this._dat[ 0|FACE_DIR ] = dir;
+      this._set |= FACE_DIR_SET|0;
     },
 
 
     setStencilFunc : function( func, ref, mask ){
-      this._dat[ STENCIL_FUNC ] = func;
-      this._dat[ STENCIL_REF ] = ref;
-      this._dat[ STENCIL_VALUE_MASK ] = mask;
-      this._set |= STENCIL_FUNC_SET;
-      // TODO !! unset BACK
+      this._dat[ 0|STENCIL_FUNC       ] = func;
+      this._dat[ 0|STENCIL_REF        ] = ref;
+      this._dat[ 0|STENCIL_VALUE_MASK ] = mask;
+      this._set = this._set & ~STENCIL_B_FUNC_SET | (~~STENCIL_FUNC_SET);
     },
 
     setStencilOp : function( sfail, dpfail, dppass ){
-      this._dat[ STENCIL_OP_FAIL ] = sfail;
-      this._dat[ STENCIL_OP_ZFAIL] = dpfail;
-      this._dat[ STENCIL_OP_ZPASS ] = dppass;
-      this._set |= STENCIL_OP_SET;
-      // TODO !! unset BACK
+      this._dat[ 0|STENCIL_OP_FAIL ] = sfail;
+      this._dat[ 0|STENCIL_OP_ZFAIL] = dpfail;
+      this._dat[ 0|STENCIL_OP_ZPASS ] = dppass;
+      this._set = this._set & ~STENCIL_B_OP_SET | (~~STENCIL_OP_SET);
     },
 
     setStencilMask : function( mask ){
-      this._dat[ STENCIL_WRITEMASK ] = mask;
-      this._set |= STENCIL_MASK_SET;
-      // TODO !! unset BACK
+      this._dat[ 0|STENCIL_WRITEMASK ] = mask;
+      this._set = (this._set & ~STENCIL_B_MASK_SET) | (~~STENCIL_MASK_SET);
     },
 
 
 
-    setStencilFuncBack : function( func, ref, mask ){
-      this._dat[ STENCIL_B_FUNC ] = func;
-      this._dat[ STENCIL_B_REF ] = ref;
-      this._dat[ STENCIL_B_VALUE_MASK ] = mask;
-      this._set |= STENCIL_B_FUNC_SET;
+    setStencilFuncSeparate : function( func, ref, mask, funcback, refback, maskback ){
+      var dat = this._dat;
+      dat[ 0|STENCIL_FUNC         ] = func;
+      dat[ 0|STENCIL_REF          ] = ref;
+      dat[ 0|STENCIL_VALUE_MASK   ] = mask;
+      dat[ 0|STENCIL_B_FUNC       ] = funcback;
+      dat[ 0|STENCIL_B_REF        ] = refback;
+      dat[ 0|STENCIL_B_VALUE_MASK ] = maskback;
+      this._set |= STENCIL_B_FUNC_SET | STENCIL_FUNC_SET;
     },
 
-    setStencilOpBack : function( sfail, dpfail, dppass ){
-      this._dat[ STENCIL_B_OP_FAIL ] = sfail;
-      this._dat[ STENCIL_B_OP_ZFAIL] = dpfail;
-      this._dat[ STENCIL_B_OP_ZPASS ] = dppass;
-      this._set |= STENCIL_B_OP_SET;
+    setStencilOpSeparate : function( sfail, dpfail, dppass, sfailback, dpfailback, dppassback ){
+      var dat = this._dat;
+      dat[ 0|STENCIL_OP_FAIL    ] = sfail;
+      dat[ 0|STENCIL_OP_ZFAIL   ] = dpfail;
+      dat[ 0|STENCIL_OP_ZPASS   ] = dppass;
+      dat[ 0|STENCIL_B_OP_FAIL  ] = sfailback;
+      dat[ 0|STENCIL_B_OP_ZFAIL ] = dpfailback;
+      dat[ 0|STENCIL_B_OP_ZPASS ] = dppassback;
+      this._set |= STENCIL_B_OP_SET | STENCIL_OP_SET;
     },
 
-    setStencilMaskBack : function( mask ){
-      this._dat[ STENCIL_B_WRITEMASK ] = mask;
-      this._set |= STENCIL_B_MASK_SET;
+    setStencilMaskSeparate : function( mask, maskback ){
+      this._dat[ 0|STENCIL_WRITEMASK   ] = mask;
+      this._dat[ 0|STENCIL_B_WRITEMASK ] = maskback;
+      this._set |= STENCIL_B_MASK_SET | STENCIL_MASK_SET;
     }
 
   };
