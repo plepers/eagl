@@ -4,7 +4,6 @@ define( function( ){
 
 /*
 
-infos : (<0|foo>) expressions help uglifyjs2 optimizations (resolve/inline constants)
 
 blend func
 
@@ -14,6 +13,7 @@ culling
 
 stencil
 
+infos : (<0|foo> or ~~bar) expressions help uglifyjs2 inline constants
 
 */
 
@@ -134,7 +134,7 @@ stencil
     this.currentCongig = new GLConfig();
     this._stack = new Uint16Array( (LEN * MIN_ALLOC)|0 );
     this._sets = new Uint16Array( MIN_ALLOC|0 );
-    this._size = MIN_ALLOC;
+    this._size = MIN_ALLOC|0;
     this._ptr = 0;
   }
 
@@ -205,7 +205,7 @@ stencil
 
     toDefault : function(){
       this._dat.set( _DEFAULT_STATE );
-      this._set = _DEFAULT_SET;
+      this._set = _DEFAULT_SET|0;
     },
 
     setupGL : function( gl ){

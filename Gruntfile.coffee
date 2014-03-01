@@ -65,8 +65,21 @@ module.exports = (grunt) ->
 
     jshint:
       all: [
-        'src/**/*.js'
+        '<%= dirs.sources %>/**/*.js'
       ]
+
+
+    # Uglify
+    # ================
+
+    uglify:
+      sources:
+        files: [
+          expand: true,
+          cwd: '<%= dirs.sources %>/',
+          src: '**/*.js',
+          dest: '<%= dirs.tmp %>/src'
+        ]
 
 
     # WATCHER

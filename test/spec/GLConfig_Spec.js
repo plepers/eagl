@@ -4,9 +4,10 @@ define(
     'spec/aequal',
     'eagl/objects/Object3D',
     'eagl/gl/GLConfig',
-    'eagl/gl/GLEnum'
+    'eagl/gl/GLEnum',
+    'utils/mock/GLContext'
   ],
-  function( expect, aequal, Object3D, GLConfig, GLEnum ){
+  function( expect, aequal, Object3D, GLConfig, GLEnum, MockContext ){
 
     var gl, defaultCfg;
 
@@ -14,11 +15,12 @@ define(
       return parseInt( str, 2 );
     };
 
-    var hasWebgl = (function(){
+    var haveWebgl = (function(){
       if( document != undefined ){
         var canvas = document.createElement( 'canvas' );
         if( canvas != undefined ){
-          var gl = canvas.getContext( 'webgl' ) || canvas.getContext( 'experimental-webgl' );
+          var p = {stencil: true};
+          var gl = canvas.getContext( 'webgl',p ) || canvas.getContext( 'experimental-webgl',p );
           if( gl != null )
             return true;
         }
@@ -27,7 +29,7 @@ define(
     })();
 
     var itGl = function(desc, fn){
-      if( hasWebgl )
+      if( haveWebgl )
         it( desc, fn );
     };
 
@@ -56,7 +58,11 @@ define(
 
       beforeEach(function(){
 
-        gl = document.createElement( 'canvas' ).getContext( 'experimental-webgl' );
+        if( haveWebgl )
+          gl = document.createElement( 'canvas' ).getContext( 'experimental-webgl' );
+        else
+          gl = new MockContext();
+
         defaultCfg = new GLConfig();
         defaultCfg.toDefault();
 
@@ -312,16 +318,16 @@ define(
 
         it( "should fill correct set", function(){
           var cfg = new GLConfig();
-          cfg.setStencilFunc( gl.GEQUAL, 42, 5 );
+          cfg.setStencilFunc( gl.GEQUAL, 0, 5 );
           expect( cfg._set ).to.be.equal( bin( '10000000' ) );
         });
 
 
         it( "should fill correct cfg", function(){
           var cfg = new GLConfig();
-          cfg.setStencilFunc( gl.GEQUAL, 42, 5 );
+          cfg.setStencilFunc( gl.GEQUAL, 10, 5 );
           expect( cfg._dat[9] ).to.be.equal( gl.GEQUAL );
-          expect( cfg._dat[10] ).to.be.equal( 42 );
+          expect( cfg._dat[10] ).to.be.equal( 10 );
           expect( cfg._dat[11] ).to.be.equal( 5 );
         });
 
@@ -329,7 +335,7 @@ define(
         itGl( "should setup gl context", function(){
           var cfg = new GLConfig();
           cfg.toDefault();
-          cfg.setStencilFunc( gl.GEQUAL, 42, 5 );
+          cfg.setStencilFunc( gl.GEQUAL, 0, 5 );
           cfg.setupGL( gl );
           compareFromGl( cfg, gl );
         });
@@ -398,16 +404,16 @@ define(
 
         it( "should fill correct set", function(){
           var cfg = new GLConfig();
-          cfg.setStencilFuncSeparate( gl.GEQUAL, 42, 5, gl.NOTEQUAL, 20, 22 );
+          cfg.setStencilFuncSeparate( gl.GEQUAL, 40, 5, gl.NOTEQUAL, 20, 22 );
           expect( cfg._set ).to.be.equal( bin( '10010000000' ) );
         });
 
 
         it( "should fill correct cfg", function(){
           var cfg = new GLConfig();
-          cfg.setStencilFuncSeparate( gl.GEQUAL, 42, 5, gl.NOTEQUAL, 20, 22 );
+          cfg.setStencilFuncSeparate( gl.GEQUAL, 40, 5, gl.NOTEQUAL, 20, 22 );
           expect( cfg._dat[9] ).to.be.equal( gl.GEQUAL );
-          expect( cfg._dat[10] ).to.be.equal( 42 );
+          expect( cfg._dat[10] ).to.be.equal( 40 );
           expect( cfg._dat[11] ).to.be.equal( 5 );
           expect( cfg._dat[16] ).to.be.equal( gl.NOTEQUAL );
           expect( cfg._dat[17] ).to.be.equal( 20 );
@@ -418,7 +424,7 @@ define(
         itGl( "should setup gl context", function(){
           var cfg = new GLConfig();
           cfg.toDefault();
-          cfg.setStencilFuncSeparate( gl.GEQUAL, 42, 5, gl.NOTEQUAL, 20, 22 );
+          cfg.setStencilFuncSeparate( gl.GEQUAL, 0, 5, gl.NOTEQUAL, 0, 22 );
           cfg.setupGL( gl );
           compareFromGl( cfg, gl );
         });
