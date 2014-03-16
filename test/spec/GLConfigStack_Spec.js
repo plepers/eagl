@@ -146,7 +146,7 @@ define(
 
 
 
-        it( "should restore head to previous value", function(){
+        it( "should restore head to previous value (no sep > sep)", function(){
 
           var cfg = getComplexConfig();
 
@@ -157,6 +157,21 @@ define(
           var head = stack._head;
 
           equalConfig( head, defaultCfg );
+
+        });
+
+
+        it( "should restore head to previous value (sep > no sep)", function(){
+
+          var cfg = getComplexConfig();
+
+          stack.push( cfg );
+          stack.push( defaultCfg );
+          stack.pop();
+
+          var head = stack._head;
+
+          equalConfig( head, cfg );
 
         });
 

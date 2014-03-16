@@ -34,9 +34,11 @@ define( [
     },
 
     applyConfig : function(){
-      this.cfgStack.patch( this._cfg, _patch );
-      _patch.setupGL( this.gl );
-      this._validCfg = true;
+      if( !this._validCfg ) {
+        this.cfgStack.patch( this._cfg, _patch );
+        _patch.setupGL( this.gl );
+        this._validCfg = true;
+      }
     }
 
 

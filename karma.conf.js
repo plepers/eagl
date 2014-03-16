@@ -85,13 +85,14 @@ module.exports = function(config) {
         browserName: 'chrome',
         version: '32',
         platform: 'Windows 8.1'
-      },
-      'SL_Firefox_WIN81': {
-        base: 'SauceLabs',
-        browserName: 'firefox',
-        version: '27',
-        platform: 'Windows 8.1'
-      },
+      }
+      // ,
+      // 'SL_Firefox_WIN81': {
+      //   base: 'SauceLabs',
+      //   browserName: 'firefox',
+      //   version: '27',
+      //   platform: 'Windows 8.1'
+      // },
 
       //Linux
       // 'SL_Chrome_NIX': {
