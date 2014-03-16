@@ -1,7 +1,7 @@
 define(
   [
     'expect',
-    'spec/aequal',
+    'utils/aequal',
     'refs/mat4_mul_ref',
     'eagl/math/mat4'
   ],

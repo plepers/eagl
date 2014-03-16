@@ -24,7 +24,8 @@ require( [
     './spec/mat4_Spec',
     './spec/Object3D_Spec',
     './spec/Scene_Spec',
-    './spec/GLConfig_Spec'
+    './spec/GLConfig_Spec',
+    './spec/GLConfigStack_Spec'
   ],
   function( ){
     var runner

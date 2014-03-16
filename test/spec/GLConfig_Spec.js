@@ -1,32 +1,22 @@
 define(
   [
     'expect',
-    'spec/aequal',
+    'utils/aequal',
     'eagl/objects/Object3D',
     'eagl/gl/GLConfig',
     'eagl/gl/GLEnum',
+    'utils/capabilities',
     'utils/mock/GLContext'
   ],
-  function( expect, aequal, Object3D, GLConfig, GLEnum, MockContext ){
+  function( expect, aequal, Object3D, GLConfig, GLEnum, capabilities, MockContext ){
 
-    var gl, defaultCfg;
+    var gl, defaultCfg,
+        haveWebgl = capabilities.webgl();
 
     var bin = function( str ){
       return parseInt( str, 2 );
     };
 
-    var haveWebgl = (function(){
-      if( document != undefined ){
-        var canvas = document.createElement( 'canvas' );
-        if( canvas != undefined ){
-          var p = {stencil: true};
-          var gl = canvas.getContext( 'webgl',p ) || canvas.getContext( 'experimental-webgl',p );
-          if( gl != null )
-            return true;
-        }
-      }
-      return false;
-    })();
 
     var itGl = function(desc, fn){
       if( haveWebgl )
@@ -68,7 +58,23 @@ define(
 
       })
 
-      describe( "fromGL / toDefault", function(){
+      describe( "toDefault", function(){
+
+
+        itGl( "should fullfill a standard default gl context state", function(){
+
+          var cfg = new GLConfig();
+          cfg.toDefault();
+
+          expect( gl ).to.be.ok();
+          expect( cfg._set ).to.be.equal( 1011 );
+          // todo check datas
+
+        });
+
+      });
+
+      describe( "fromGL", function(){
 
 
         itGl( "should fullfill a default config", function(){
@@ -81,6 +87,109 @@ define(
           aequal( cfg._dat, defaultCfg._dat );
 
         });
+
+      });
+
+
+      describe( "clone", function(){
+
+
+        it( "should copy set and datas", function(){
+
+          var cfg = new GLConfig();
+          cfg.toDefault();
+
+          var clone = cfg.clone();
+
+          expect( cfg._set ).to.be.equal( clone._set );
+          aequal( cfg._dat, clone._dat );
+
+        });
+
+        it( "should not be affected by referrer modifications", function(){
+
+          var cfg = new GLConfig();
+          cfg.toDefault();
+
+          var clone = cfg.clone();
+
+          cfg.setBlendFunction( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA );
+
+          expect( clone._dat[1] ).to.be.equal( gl.ZERO );
+          expect( clone._dat[2] ).to.be.equal( gl.ONE );
+
+        });
+
+      });
+
+      describe( "patch", function(){
+
+        it( "equal configs should return unset patch", function(){
+          var cfg1 = new GLConfig(),
+              cfg2 = new GLConfig(),
+              patch = new GLConfig();
+          cfg1.toDefault();
+          cfg2.toDefault();
+          cfg1.patch( cfg2 , patch );
+          expect( patch._set ).to.be.equal( 0 );
+        });
+
+        it( "an unset config just return input", function(){
+          var cfg1 = new GLConfig(),
+              cfg2 = new GLConfig(),
+              patch = new GLConfig();
+
+          cfg2.toDefault();
+          cfg2.patch( cfg1 , patch );
+          expect( patch._set ).to.be.equal( cfg2._set );
+          aequal( patch._dat, cfg2._dat );
+        });
+
+        it( "with unset config just return unset patch", function(){
+          var cfg1 = new GLConfig(),
+              cfg2 = new GLConfig(),
+              patch = new GLConfig();
+
+          cfg2.toDefault();
+          cfg1.patch( cfg2 , patch );
+          expect( patch._set ).to.be.equal( 0 );
+        });
+
+
+        it( "config with different values should have set and correct value", function(){
+          var cfg1 = new GLConfig(),
+              cfg2 = new GLConfig(),
+              patch = new GLConfig();
+
+
+          cfg1.setBlendFunction( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA );
+          cfg2.setBlendFunction( gl.SRC_ALPHA, gl.ZERO );
+
+
+          cfg2.patch( cfg1 , patch );
+          expect( patch._set ).to.be.equal( bin( '010' ) );
+          expect( patch._dat[1] ).to.be.equal( gl.ZERO );
+          expect( patch._dat[2] ).to.be.equal( gl.SRC_ALPHA );
+        });
+
+        it( "config with *separate should have consistent set", function(){
+          var cfg1 = new GLConfig(),
+              cfg2 = new GLConfig(),
+              patch = new GLConfig();
+
+
+          cfg1.setBlendFunction( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA );
+          cfg2.setBlendFunctionSeparate( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ZERO );
+
+
+          cfg2.patch( cfg1 , patch );
+          expect( patch._set ).to.be.equal( bin( '1010' ) );
+          expect( patch._dat[1] ).to.be.equal( gl.ONE_MINUS_SRC_ALPHA );
+          expect( patch._dat[2] ).to.be.equal( gl.SRC_ALPHA );
+          expect( patch._dat[4] ).to.be.equal( gl.ZERO );
+          expect( patch._dat[5] ).to.be.equal( gl.ONE );
+        });
+
 
       });
 

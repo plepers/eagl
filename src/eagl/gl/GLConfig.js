@@ -90,7 +90,7 @@ infos : (<0|foo> or ~~bar) expressions help uglifyjs2 inline constants
 
         SETS_LEN = 13,
 
-        _DEFAULT_SET = 1011,
+        _DEFAULT_SET = 1011, // b 1111110011
 
         _DEFAULT_STATE = new Uint16Array([
           32774,   // BLEND_EQ_C            :   FUNC_ADD
@@ -123,19 +123,49 @@ infos : (<0|foo> or ~~bar) expressions help uglifyjs2 inline constants
 
   GLConfig.ConfigStack = ConfigStack;
 
+  // avoid set inconsistency for '*separate' configs
+  function _fixSet( set ){
+    return (set |
+        (( set & ~~BLEND_FUNC_A_SET   ) >>> 2 ) |
+        (( set & ~~BLEND_EQ_A_SET     ) >>> 2 ) |
+        (( set & ~~STENCIL_B_FUNC_SET ) >>> 3 ) |
+        (( set & ~~STENCIL_B_OP_SET   ) >>> 3 ) |
+        (( set & ~~STENCIL_B_MASK_SET ) >>> 3 )
+      )
+  }
+
 
   //  ╔═╗╔╦╗╔═╗╔═╗╦╔═
   //  ╚═╗ ║ ╠═╣║  ╠╩╗
   //  ╚═╝ ╩ ╩ ╩╚═╝╩ ╩
 
-  const MIN_ALLOC = 32
+  const MIN_ALLOC = 32;
 
+
+  //   A, B, C, D, E, F, ?   -- initial config
+  //   1, 1, 1, 1, 1, 1, 0
+  //
+  //   ?, ?, X, D, ?, ?, ?   -- push config
+  //   0, 0, 1, 1, 0, 0, 0   -- cfg set
+  //   1, 1, 1, 1, 1, 1, 0   -- new set
+  //   0, 0, 0, 1, 0, 0, 0   -- diffs
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
   function ConfigStack(){
-    this.currentCongig = new GLConfig();
     this._stack = new Uint16Array( (LEN * MIN_ALLOC)|0 );
     this._sets = new Uint16Array( MIN_ALLOC|0 );
     this._size = MIN_ALLOC|0;
     this._ptr = 0;
+    this._head = new GLConfig();
   }
 
   ConfigStack.prototype = {
@@ -145,31 +175,54 @@ infos : (<0|foo> or ~~bar) expressions help uglifyjs2 inline constants
       var ptr = this._ptr,
           sset = this._sets[ptr++],
           lset=  cfg._set,
-          sptr, sdat, ldat, i;
+          sptr, sdat, ldat, hdat, i, sbit, val;
 
       if( ptr == this._size ){
         this._grow();
       }
 
-      this._sets[ptr] = sset | lset;
+      sset |= lset;
+      this._head._set = sset;
+      this._sets[ptr] = sset;
       this._ptr = ptr;
       sptr = ptr*(0|LEN);
 
       sdat = this._stack;
       ldat = cfg._dat;
+      hdat = this._head._dat;
+
 
       for( i = 0; i < (LEN|0); i++ )
       {
-        if( 0 !== ( lset & DAT_MASKS[ i ] ) )
-        {
-          sdat[ Sptr+i ] = ldat[ i ];
+        sbit = DAT_MASKS[ i ];
+        if( 0 !== ( lset & sbit ) ) {
+          val = ldat[ i ];
         }
+        else {
+          val = sdat[ sptr+i-(0|LEN) ];
+        }
+        hdat[ i ] = val;
       }
+
+      sdat.set( hdat, sptr );
 
     },
 
+
     pop : function() {
-      this._ptr--;
+      var ptr = --this._ptr;
+          hdat = this._head._dat,
+          sptr = ptr*(0|LEN),
+          dat = this._stack;
+
+      this._head._set = this._sets[ptr];
+      for( i = 0; i < (LEN|0); i++ ){
+        hdat[i] = dat[sptr+i];
+      }
+    },
+
+    patch : function( cfg, out ){
+      this._head.patch( cfg, out );
     },
 
     _grow : function(){
@@ -196,6 +249,8 @@ infos : (<0|foo> or ~~bar) expressions help uglifyjs2 inline constants
     return gl.getParameter( p );
   };
 
+
+
   function GLConfig(){
     this._dat = new Uint16Array( 0|LEN );
     this._set = 0;
@@ -206,6 +261,45 @@ infos : (<0|foo> or ~~bar) expressions help uglifyjs2 inline constants
     toDefault : function(){
       this._dat.set( _DEFAULT_STATE );
       this._set = _DEFAULT_SET|0;
+    },
+
+
+    clone : function(){
+      var res = new GLConfig();
+      res._dat.set( this._dat );
+      res._set = this._set;
+      return res;
+    },
+
+    /*
+    patch
+    ============
+    Apply this config on top of cfg input.
+    */
+    patch : function( cfg, out ){
+      var ldat = this._dat,
+          lset = this._set,
+          sdat = cfg._dat,
+          sset = cfg._set,
+          odat = out._dat,
+          oset = 0,
+          sbit;
+
+      for( i = 0; i < (LEN|0); i++ )
+      {
+        sbit = DAT_MASKS[ i ];
+        // data is marked as set
+        if( 0 !== ( lset & sbit ) )
+        {
+          if( (0 === ( sset & sbit )) || (ldat[ i ] !== sdat[ i ]) ) {
+            oset |= sbit;
+          }
+          sdat[ i ] = ldat[ i ];
+        }
+      }
+      odat.set( sdat );
+      cfg._set |= lset;
+      out._set = _fixSet( oset );
     },
 
     setupGL : function( gl ){
@@ -440,15 +534,17 @@ infos : (<0|foo> or ~~bar) expressions help uglifyjs2 inline constants
 
     /*
       enums
-        BLEND_DST_RGB
-        BLEND_SRC_RGB
-        BLEND_DST_ALPHA
-        BLEND_SRC_ALPHA
-        CONSTANT_COLOR
-        ONE_MINUS_CONSTANT_COLOR
-        CONSTANT_ALPHA
-        ONE_MINUS_CONSTANT_ALPHA
-        BLEND_COLOR
+        ZERO
+        ONE
+        SRC_COLOR
+        ONE_MINUS_SRC_COLOR
+        SRC_ALPHA
+        ONE_MINUS_SRC_ALPHA
+        DST_ALPHA
+        ONE_MINUS_DST_ALPHA
+        DST_COLOR
+        ONE_MINUS_DST_COLOR
+        SRC_ALPHA_SATURATE
     */
     setBlendFunctionSeparate: function( srcRgb, dstRgb, srcAlpha, dstAlpha ){
       this._dat[ 0|BLEND_FUNC_C_SRC ] = srcRgb;
@@ -466,8 +562,8 @@ infos : (<0|foo> or ~~bar) expressions help uglifyjs2 inline constants
     /*
       enums
         FUNC_ADD
-        BLEND_EQUATION
-        BLEND_EQUATION_ALPHA
+        FUNC_SUBTRACT
+        FUNC_REVERSE_SUBTRACT
     */
     setBlendEquationSeparate : function( rgbEq, alphaEq ){
       this._dat[ 0|BLEND_EQ_C] = rgbEq;

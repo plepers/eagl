@@ -80,6 +80,8 @@ module.exports = (grunt) ->
           src: '**/*.js',
           dest: '<%= dirs.tmp %>/src'
         ]
+      options:
+        beautify : false
 
 
     # WATCHER

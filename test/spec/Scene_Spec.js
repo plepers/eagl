@@ -1,7 +1,7 @@
 define(
   [
     'expect',
-    'spec/aequal',
+    'utils/aequal',
     'eagl/objects/Object3D',
     'eagl/objects/Mesh',
     'eagl/objects/Scene',
