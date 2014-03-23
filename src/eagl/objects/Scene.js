@@ -2,11 +2,13 @@
 define(
   [
     'eagl/core/Pipeline',
+    'eagl/core/Viewport',
     'eagl/lang',
     './Object3D'
   ],
   function(
     Pipeline,
+    Viewport,
     lang,
     Object3D
   ){
@@ -17,8 +19,13 @@ define(
 
     Object3D.call( this );
 
+    // internal
     this.pipeline = new Pipeline();
 
+    // main rendering viewport
+    this.viewport = new Viewport();
+
+    // as root Object3D
     this.scene = this;
 
   }

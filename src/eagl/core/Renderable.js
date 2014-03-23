@@ -34,6 +34,11 @@ define(
     },
 
 
+    getUnit : function( technic ){
+      //todo - return unit for given technic
+    },
+
+
     //
     // called by material
     // when passes changed
@@ -44,15 +49,15 @@ define(
 
 
 
-    setPipeline : function( p ){
-      var current = this.pipeline;
-      if( current !== null )
-        current.removeUnits( this._units );
+    // setPipeline : function( p ){
+    //   var current = this.pipeline;
+    //   if( current !== null )
+    //     current.removeUnits( this._units );
 
-      this.pipeline = p;
-      if( p !== null )
-        p.addUnits( this._units );
-    },
+    //   this.pipeline = p;
+    //   if( p !== null )
+    //     p.addUnits( this._units );
+    // },
 
 
 

@@ -3,11 +3,12 @@ define( ['eagl/math/mat4'], function( mat4 ) {
 
   var Object3D = function() {
 
+    // Privates - getset?
     this.matrix       = mat4.create();
     this.matrixWorld  = mat4.create();
     this.invalidMw    = true;
 
-    this.mask         = 0;
+    this.mask         = 0x7FFFFFFF;
 
     this.name         = null;
     this.parent       = null;
@@ -89,9 +90,12 @@ define( ['eagl/math/mat4'], function( mat4 ) {
 
         renderable = this.getRenderable();
 
-        if( null !== renderable ) {
-          pipe = ( null !== scene ) ? scene.pipeline : null;
-          renderable.setPipeline( pipe );
+
+        if( null !== renderable ){
+          if( null !== this.scene )
+            this.scene.pipeline.removeRenderable( renderable );
+          if( null !== scene )
+            scene.pipeline.addRenderable( renderable );
         }
 
         this.scene = scene;

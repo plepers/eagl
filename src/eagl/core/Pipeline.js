@@ -7,119 +7,90 @@ define(
     RenderUnit
   ){
 
-  _nullUnit = function(){
-    var unit = new RenderUnit();
-    unit._mask = 0;
-    return unit;
-  };
-
-
-  function Thread( prio ) {
-
-    var _rhead = _nullUnit(),
-        _rtail = _nullUnit();
-
-    _rhead.next = _rtail;
-    _rtail.prev = _rhead;
-
-
-    this._priority   = prio;
-    this._rhead      = _rhead;
-    this._rtail      = _rtail;
-    this.head        = _rhead;
-    this.tail        = _rhead;
-  }
-
-  Thread.prototype = {
-    append : function( unit ) {
-      unit.add( this.tail );
-    },
-
-    prepend : function( unit ) {
-      unit.add( this._rhead );
-    }
-  };
-
-
+//  ╔═╗╦╔═╗╔═╗╦  ╦╔╗╔╔═╗
+//  ╠═╝║╠═╝║╣ ║  ║║║║║╣
+//  ╩  ╩╩  ╚═╝╩═╝╩╝╚╝╚═╝
 
   function Pipeline(){
 
-    this._threads = [];
+    this._renderables = [];
+    this._viewports = [];
+    this._technics  = [];
 
   }
 
   Pipeline.prototype = {
 
-    getHead : function(){
-      return this._threads[0]._rhead;
+
+    addRenderable : function( r ){
+      // todo !!! check if already pushed
+      this._renderables.push( r );
+      var techs = this._technics,
+          unit;
+
+      for (var i = 0, l = techs.length; i < l; i++) {
+        unit = r.getUnit( techs[i] );
+        if( unit )
+          techs[i].addUnit( unit );
+      };
+
     },
 
-    addUnit : function( unit ){
+    removeRenderable : function( r ){
+      var ar = this._renderables,
+          i = ar.indexOf( r ),
+          techs = this._technics,
+          unit;
 
-      unit.pipe( this );
-      var thread = this.getThread( unit._thread );
-      thread.append( unit );
-    },
+      if( i > -1 ){
 
-    removeUnit : function( unit ){
-      unit.unpipe( this );
-      unit.remove();
-    },
+        ar.splice( i, 1 );
 
-    addUnits : function( units ){
-      for (var i = 0, l = units.length; i < l; i++) {
-        this.addUnit( units[i] );
+        for (var i = 0, l = techs.length; i < l; i++) {
+          unit = r.getUnit( techs[i] );
+          if( unit )
+            techs[i].removeUnit( unit );
+        };
       }
     },
 
-    removeUnits : function( units ){
-      for (var i = 0, l = units.length; i < l; i++) {
-        this.removeUnit( units[i] );
+
+    //
+    // technics related stuffs
+    //
+
+    addTechnic : function( technic ){
+      var map = this._technicMap,
+          renderables = this._renderables,
+          unit;
+
+      if( map[id] === undefined ) {
+        map[technic.id] = technic;
+        this._technics.push( technic );
       }
+
+      for (var i = 0, l = renderables.length; i < l; i++) {
+        unit = renderables[i].getUnit( technic );
+        if( unit )
+          technic.addUnit( unit );
+      };
     },
 
 
-    updateUnit : function( unit ){
+    removeTechnic : function( technic ){
+      var map = this._technicMap,
+          arr = this._technics;
+      if( map[id] !== undefined ) {
+        delete map[technic.id];
+        arr.splice( arr.indexOf( technic ) );
+      }
 
+      // todo !!! delete units from renderables
     },
 
-    getThread : function( prio ){
-      var i = 0,
-          match = 0,
-          priority,
-          thread, nthread,
-          _threads = this._threads,
-          l = _threads.length;
-
-      for (; i < l; i++) {
-        thread = _threads[i];
-        priority = thread._priority;
-
-        if( priority < prio ) {
-          match = i+1;
-        }
-        else if( priority === prio ){
-          return thread;
-        }
-        else break;
-      }
-
-      nthread = new Thread( prio );
-      _threads.splice( match, 0, nthread );
-      if( match > 0 ) {
-        thread = _threads[match-1];
-        thread._rtail.next = nthread._rhead;
-        nthread._rhead.prev = thread._rtail;
-      }
-      if( match < l ){
-        thread = _threads[match+1];
-        thread._rhead.prev = nthread._rtail;
-        nthread._rtail.next = thread._rhead;
-      }
-
-      return nthread;
+    getTechnic : function( id ){
+      return this._technicMap[id];
     }
-
 
 
   };

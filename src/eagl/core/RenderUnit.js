@@ -5,7 +5,6 @@ define( function() {
     this.next = null;
     this.prev = null;
 
-    this._thread = 0;
     this._mask = 0xFFFFFF; // U24
 
     this.pass     = ( undefined !== pass )     ? pass     : null;
@@ -36,20 +35,20 @@ define( function() {
 
 
 
-    set thread( val ){
-      if( this._thread !== val ) {
-        this._thread = val;
-        if( null !== this._pipeline ) {
-          this._pipeline.updateUnit( this );
-        }
-      }
-    },
+    // set thread( val ){
+    //   if( this._thread !== val ) {
+    //     this._thread = val;
+    //     if( null !== this._pipeline ) {
+    //       this._pipeline.updateUnit( this );
+    //     }
+    //   }
+    // },
 
 
 
-    get thread(){
-      return this._thread;
-    },
+    // get thread(){
+    //   return this._thread;
+    // },
 
 
 

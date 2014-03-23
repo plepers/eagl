@@ -16,7 +16,15 @@ define(
 
   Material.prototype = {
 
+    /*
+    type
+      DEFAULT
+      DEPTH
+      NORMAL
+    */
+    getTechnic : function( type, opts ){
 
+    },
 
     getPasses : function(){
       return this._passes;
