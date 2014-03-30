@@ -81,7 +81,7 @@ module.exports = (grunt) ->
           dest: '<%= dirs.tmp %>/src'
         ]
       options:
-        beautify : false
+        beautify : true
 
 
     # WATCHER

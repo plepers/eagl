@@ -7,6 +7,7 @@ define(
     'eagl/objects/Scene',
     'eagl/materials/Material',
     'eagl/core/Renderable',
+    'eagl/core/Technic',
     'eagl/core/RenderUnit'
   ],
   function(
@@ -17,60 +18,70 @@ define(
     Scene,
     Material,
     Renderable,
+    Technic,
     RenderUnit
     ){
 
 
 
-    createUnit = function( p, name ){
-      var u  = new RenderUnit();
-      u._thread = p;
-      u.name = name;
-      return u;
-    };
 
-    createRenderable = function( name ) {
-      var r = new Renderable();
-      r._units.push( createUnit( -5, name+"_u_-5" ) );
-      r._units.push( createUnit(  0, name+"_u_0" ) );
-      r._units.push( createUnit(  5, name+"_u_5" ) );
-      return r;
-    }
 
     createObject = function( name ){
-      var m = new Mesh();
+      var mat = new Material();
+      var m = new Mesh( null, mat );
       m.name = name;
-      m._renderable = createRenderable( name );
       return m;
     }
 
-    testPipe = function( scene ){
-      var p = scene.pipeline;
 
-      for (var i = 0, l = p._threads.length; i < l; i++) {
-        var t = p._threads[i];
-        t._rhead.name = "head_" + t._priority;
-        t._rtail.name = "tail_" + t._priority;
-      }
-
-      var head =  p._threads[0]._rhead;
-      var names = [];
-
-      while( head !== null ) {
-        names.push( head.name );
-        head = head.next;
-      }
-
-      var should = [
-        'head_-5', 'm2_u_-5', 'm1_u_-5', 'm0_u_-5', 'tail_-5',
-        'head_0', 'm2_u_0', 'm1_u_0', 'm0_u_0', 'tail_0',
-        'head_5', 'm2_u_5', 'm1_u_5', 'm0_u_5', 'tail_5'
-      ];
-
-      expect( names ).to.be.eql( should );
-    }
 
     describe( "objects - Scene", function(){
+
+
+      describe( "add technics", function(){
+
+
+          var scene = new Scene();
+
+          var technic = new Technic( 1 );
+          technic.addBatch( 0, 0x1 );
+          technic.addBatch( 1, 0x2 );
+          scene.pipeline.addTechnic( technic );
+
+          technic = new Technic( 2 );
+          technic.addBatch( 0, 0x1 );
+          technic.addBatch( 1, 0x2 );
+          scene.pipeline.addTechnic( technic );
+
+
+      });
+
+
+
+      describe( "add technics and renderables", function(){
+
+
+          var scene = new Scene();
+
+          var technic = new Technic( 1 );
+          technic.addBatch( 0, 1 );
+          technic.addBatch( 1, 2 );
+          scene.pipeline.addTechnic( technic );
+
+          technic = new Technic( 2 );
+          technic.addBatch( 0, 1 );
+          technic.addBatch( 1, 2 );
+          scene.pipeline.addTechnic( technic );
+
+
+          scene.add( createObject( "m0" ) );
+          scene.add( createObject( "m1" ) );
+          scene.add( createObject( "m2" ) );
+
+
+      });
+
+
 
       describe( "temp", function(){
 
@@ -86,8 +97,6 @@ define(
           parent.add( createObject( "m1" ) );
           parent.add( createObject( "m2" ) );
 
-
-          testPipe( scene );
 
         });
 

@@ -14,8 +14,9 @@ define(
   function Pipeline(){
 
     this._renderables = [];
-    this._viewports = [];
-    this._technics  = [];
+    this._viewports   = [];
+    this._technics    = [];
+    this._technicMap  = {};
 
   }
 
@@ -24,15 +25,9 @@ define(
 
     addRenderable : function( r ){
       // todo !!! check if already pushed
+      r.pipeline = this;
       this._renderables.push( r );
-      var techs = this._technics,
-          unit;
-
-      for (var i = 0, l = techs.length; i < l; i++) {
-        unit = r.getUnit( techs[i] );
-        if( unit )
-          techs[i].addUnit( unit );
-      };
+      this.updateRenderable( r );
 
     },
 
@@ -49,9 +44,20 @@ define(
         for (var i = 0, l = techs.length; i < l; i++) {
           unit = r.getUnit( techs[i] );
           if( unit )
-            techs[i].removeUnit( unit );
+            unit.remove();
         };
       }
+    },
+
+    updateRenderable : function( r ){
+      var techs = this._technics,
+          unit;
+
+      for (var i = 0, l = techs.length; i < l; i++) {
+        unit = r.getUnit( techs[i] );
+        if( unit )
+          techs[i].addUnit( unit );
+      };
     },
 
 
@@ -62,10 +68,11 @@ define(
     addTechnic : function( technic ){
       var map = this._technicMap,
           renderables = this._renderables,
+          id = technic.id,
           unit;
 
       if( map[id] === undefined ) {
-        map[technic.id] = technic;
+        map[id] = technic;
         this._technics.push( technic );
       }
 
@@ -80,6 +87,8 @@ define(
     removeTechnic : function( technic ){
       var map = this._technicMap,
           arr = this._technics;
+
+      // todo - dispose related units
       if( map[id] !== undefined ) {
         delete map[technic.id];
         arr.splice( arr.indexOf( technic ) );

@@ -27,7 +27,7 @@ define(
     _rtail.prev = _rhead;
 
 
-    this._priority   = prio;
+    this.mask         = mask;
     this._rhead      = _rhead;
     this._rtail      = _rtail;
     this.head        = _rhead;
@@ -39,7 +39,7 @@ define(
   Batch.prototype = {
 
     append : function( unit ) {
-      this.tail.add( unit );
+      unit.add( this.tail );
       this.tail = unit;
     },
 

@@ -9,6 +9,7 @@ define(
 
   var Renderable = function() {
     this._units     = [];
+    this._unitsMap  = {};
     this._material  = null;
     this._geometry  = null;
     this.pipeline   = null;
@@ -28,14 +29,39 @@ define(
 
       if( null !== m ) {
         m.addOwner( this );
-        this._buildUnits();
+
+        if( this.pipeline )
+          this.pipeline.updateRenderable( this );
       }
+
 
     },
 
 
+    _createUnit : function( technic ){
+      var pass, unit;
+      if( this._material ) {
+        pass = this._material.getPass( technic );
+        if( pass )
+          unit = new RenderUnit( pass );
+      }
+
+      return unit;
+    },
+
+
     getUnit : function( technic ){
-      //todo - return unit for given technic
+      var tid = technic.id,
+          unit = this._unitsMap[ tid ];
+
+      if( !unit ){
+        unit = this._createUnit( technic );
+        if( unit ) {
+          this._units.push( unit );
+          this._unitsMap[ tid ] = unit;
+        }
+      }
+      return unit;
     },
 
 
@@ -48,77 +74,13 @@ define(
     },
 
 
-
-    // setPipeline : function( p ){
-    //   var current = this.pipeline;
-    //   if( current !== null )
-    //     current.removeUnits( this._units );
-
-    //   this.pipeline = p;
-    //   if( p !== null )
-    //     p.addUnits( this._units );
-    // },
-
-
-
-    addUnit : function( unit ){
-      this._units.push( unit );
-      var p = this.pipeline;
-      if( p !== null )
-        p.addUnit( unit );
-    },
-
-
-
-    removeUnit : function( unit ){
-      var index = this._units.indexOf( unit ),
-          p = this.pipeline;
-
-      if( index > -1 ) {
-
-        this._units.splice( index, 1 );
-        if( p !== null )
-          p.removeUnit( unit );
-      }
-    },
-
-
-
-    getUnits : function(){
-      return this._units;
-    },
-
-
-
     _clearUnits : function(){
       var units = this._units;
-      var p = this.pipeline;
-      if( p !== null ) {
-        for (var i = 0, l = units.length; i < l; i++) {
-          p.removeUnit( units[i] );
-        }
+      for (var i = 0, l = units.length; i < l; i++) {
+        units[i].remove();
       }
       units.length = 0;
-    },
-
-
-
-    _buildUnits : function() {
-      var mat     = this._material,
-          geom    = this._geometry,
-          units   = this._units,
-          passes  = mat._passes,
-          unit;
-
-      this._clearUnits();
-
-      for (var i = 0, l = passes.length; i < l; i++) {
-        unit = new RenderUnit();
-        unit.pass = passes[i];
-        unit.geom = geom;
-        this.addUnit( unit );
-      }
-
+      this._unitsMap = {};
     }
 
 

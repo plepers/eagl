@@ -26,7 +26,6 @@ define(
     if( undefined !== geometry ) this.geometry = geometry;
     if( undefined !== material ) this.material = material;
 
-
   }
 
   var proto = Mesh.prototype;

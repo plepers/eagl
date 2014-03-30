@@ -6,11 +6,10 @@ define(
   var Material = function() {
 
     this._passes  = [];
+    this._passMap  = {};
+
     this._owners  = [];
 
-    // test
-    this._passes.push( new MaterialPass() );
-    this._passes.push( new MaterialPass() );
 
   };
 
@@ -22,28 +21,33 @@ define(
       DEPTH
       NORMAL
     */
-    getTechnic : function( type, opts ){
+    getPass : function( technic ){
+      var tid = technic.id;
+          pass = this._passMap[ tid ];
 
+      if( !pass ){
+        pass = this._createPass( technic );
+        if( pass ){
+          this._passes.push( pass );
+          this._passMap[ tid ] = pass;
+        }
+      }
+
+      return pass;
     },
 
     getPasses : function(){
       return this._passes;
     },
 
-    addPass : function( pass ) {
-      var p = this._passes;
-      if( o.indexOf( pass ) === -1 ) {
-        p.push( pass );
-      }
+    _createPass : function( technic ){
+      return new MaterialPass();
     },
 
-    removePass : function( pass ) {
-      var p = this._passes,
-          idx = p.indexOf( pass );
-      if( idx > -1 ) {
-        p.splice( idx, 1 );
-      }
-    },
+
+
+
+
 
     addOwner : function(renderable){
       var o = this._owners;
