@@ -426,14 +426,14 @@ define( function(){
   };
 
   var map = {};
-  for( key in Enums ){
+  for( var key in Enums ){
     var i = Enums[key];
     map[i] = key;
   }
 
   Enums.getString = function( i ){
     return map[i];
-  }
+  };
 
   Object.freeze( Enums );
 

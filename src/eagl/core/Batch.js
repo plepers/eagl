@@ -15,7 +15,7 @@ define(
     var unit = new RenderUnit();
     unit._mask = 0;
     return unit;
-  };
+  }
 
 
   function Batch( mask ) {
@@ -27,7 +27,7 @@ define(
     _rtail.prev = _rhead;
 
 
-    this.mask         = mask;
+    this.mask        = mask;
     this._rhead      = _rhead;
     this._rtail      = _rtail;
     this.head        = _rhead;

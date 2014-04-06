@@ -1,18 +1,86 @@
 
 define(
   [
+    'eagl/core/Batch',
+    'eagl/core/Pipeline',
+    'eagl/core/RenderUnit',
+    'eagl/core/Renderable',
+    'eagl/core/Renderer',
+    'eagl/core/Technic',
+    'eagl/core/Traverser',
+    'eagl/core/Viewport',
+    'eagl/gl/GLConfig',
+    'eagl/gl/GLContext',
+    'eagl/gl/GLEnum',
+    'eagl/lang',
+    'eagl/materials/Material',
+    'eagl/materials/MaterialPass',
+    'eagl/math/Rectangle',
+    'eagl/math/mat4',
+    'eagl/math/types',
+    'eagl/math/vec3',
+    'eagl/objects/Mesh',
     'eagl/objects/Object3D',
-    'eagl/core/Renderer'
+    'eagl/objects/Scene',
+    'eagl/shaders/Program',
+    'eagl/shaders/Shader',
+    'eagl/shaders/ShaderPart',
+    'eagl/shaders/glsl'
   ],
   function(
+    Batch,
+    Pipeline,
+    RenderUnit,
+    Renderable,
+    Renderer,
+    Technic,
+    Traverser,
+    Viewport,
+    GLConfig,
+    GLContext,
+    GLEnum,
+    lang,
+    Material,
+    MaterialPass,
+    Rectangle,
+    mat4,
+    types,
+    vec3,
+    Mesh,
     Object3D,
-    Rnederer
+    Scene,
+    Program,
+    Shader,
+    ShaderPart,
+    glsl
   ){
 
-  var eagl = {
-    Object3D : Object3D
+  return {
+    Batch : Batch,
+    Pipeline : Pipeline,
+    RenderUnit : RenderUnit,
+    Renderable : Renderable,
+    Renderer : Renderer,
+    Technic : Technic,
+    Traverser : Traverser,
+    Viewport : Viewport,
+    GLConfig : GLConfig,
+    GLContext : GLContext,
+    GLEnum : GLEnum,
+    lang : lang,
+    Material : Material,
+    MaterialPass : MaterialPass,
+    Rectangle : Rectangle,
+    mat4 : mat4,
+    types : types,
+    vec3 : vec3,
+    Mesh : Mesh,
+    Object3D : Object3D,
+    Scene : Scene,
+    Program : Program,
+    Shader : Shader,
+    ShaderPart : ShaderPart,
+    glsl : glsl
   };
-
-  return eagl;
 
 });

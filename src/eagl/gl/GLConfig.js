@@ -131,7 +131,7 @@ infos : (<0|foo> or ~~bar) expressions help uglifyjs2 inline constants
         (( set & ~~STENCIL_B_FUNC_SET ) >>> 3 ) |
         (( set & ~~STENCIL_B_OP_SET   ) >>> 3 ) |
         (( set & ~~STENCIL_B_MASK_SET ) >>> 3 )
-      )
+      );
   }
 
 
@@ -210,7 +210,7 @@ infos : (<0|foo> or ~~bar) expressions help uglifyjs2 inline constants
 
 
     pop : function() {
-      var ptr = --this._ptr;
+      var ptr = --this._ptr,
           hdat = this._head._dat,
           sptr = ptr*(0|LEN),
           dat = this._stack;
@@ -314,9 +314,10 @@ infos : (<0|foo> or ~~bar) expressions help uglifyjs2 inline constants
 
       if ( i !== 0 ) {
 
-        ( i === (BLEND_EQ_SET|BLEND_EQ_A_SET) )
-          ? gl.blendEquationSeparate( dat[ 0|BLEND_EQ_C ], dat[ 0|BLEND_EQ_A ] )
-          : gl.blendEquation( dat[ 0|BLEND_EQ_C ] );
+        if( i === (BLEND_EQ_SET|BLEND_EQ_A_SET) )
+          gl.blendEquationSeparate( dat[ 0|BLEND_EQ_C ], dat[ 0|BLEND_EQ_A ] );
+        else
+          gl.blendEquation( dat[ 0|BLEND_EQ_C ] );
 
       }
 
@@ -330,9 +331,10 @@ infos : (<0|foo> or ~~bar) expressions help uglifyjs2 inline constants
       else {
         gl.enable( gl.BLEND );
 
-        ( i === (BLEND_FUNC_SET|BLEND_FUNC_A_SET) )
-          ? gl.blendFuncSeparate( dat[ 0|BLEND_FUNC_C_SRC ], dat[ 0|BLEND_FUNC_C_DST ], dat[ 0|BLEND_FUNC_A_SRC ], dat[ 0|BLEND_FUNC_A_DST ] )
-          : gl.blendFunc( dat[ 0|BLEND_FUNC_C_SRC ], dat[ 0|BLEND_FUNC_C_DST ] );
+        if( i === (BLEND_FUNC_SET|BLEND_FUNC_A_SET) )
+          gl.blendFuncSeparate( dat[ 0|BLEND_FUNC_C_SRC ], dat[ 0|BLEND_FUNC_C_DST ], dat[ 0|BLEND_FUNC_A_SRC ], dat[ 0|BLEND_FUNC_A_DST ] );
+        else
+          gl.blendFunc( dat[ 0|BLEND_FUNC_C_SRC ], dat[ 0|BLEND_FUNC_C_DST ] );
       }
 
 

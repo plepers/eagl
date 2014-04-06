@@ -33,7 +33,7 @@ define(
         batch = batches[i];
         if( batch.mask & unit.mask !== 0 )
           batch.append( unit );
-      };
+      }
     },
 
 
@@ -50,4 +50,4 @@ define(
 
   return Technic;
 
-})
+});

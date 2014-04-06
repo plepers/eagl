@@ -14,6 +14,8 @@ module.exports = (grunt) ->
   # load all grunt tasks
   require("load-grunt-tasks") grunt
 
+  require('./utils/tasks/make_index') grunt
+
   grunt.initConfig
 
     # configurable paths
@@ -24,6 +26,8 @@ module.exports = (grunt) ->
       test:     "test"
 
 
+    makeindex :
+      files: ['src/**/*.js']
     # URequire
     # ================
 
@@ -56,7 +60,7 @@ module.exports = (grunt) ->
         bare :                no
         injectExportsModule : no
         globalWindow :        no
-        useStrict :           yes
+        useStrict :           no
         allNodeRequires: yes
 
 
@@ -67,6 +71,9 @@ module.exports = (grunt) ->
       all: [
         '<%= dirs.sources %>/**/*.js'
       ]
+      options:
+        jshintrc : yes
+
 
 
     # Uglify
@@ -140,15 +147,35 @@ module.exports = (grunt) ->
 
 
   grunt.registerTask "build-all", [
-    "jshint"
-    "urequire:node"
-    "urequire:combined"
+    'jshint'
+    'urequire:node'
+    'urequire:combined'
   ]
 
   grunt.registerTask "build", [
-    "jshint"
-    "urequire:node"
+    'makeindex'
+    'jshint'
+    'urequire:node'
   ]
+
+
+  grunt.registerTask "build", (target) ->
+    tasks = [
+      'makeindex'
+      'jshint'
+      'urequire:node'
+    ]
+    if !target? or target is "all"
+      tasks = tasks.concat [
+        'urequire:node'
+        'urequire:combined'
+      ]
+    else
+      tasks = tasks.concat [
+        "urequire:#{target}"
+      ]
+
+    grunt.task.run tasks
 
   grunt.registerTask "test", (target) ->
     tasks = ['uglify:sources']

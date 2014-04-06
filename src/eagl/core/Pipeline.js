@@ -41,11 +41,11 @@ define(
 
         ar.splice( i, 1 );
 
-        for (var i = 0, l = techs.length; i < l; i++) {
+        for ( i = 0, l = techs.length; i < l; i++) {
           unit = r.getUnit( techs[i] );
           if( unit )
             unit.remove();
-        };
+        }
       }
     },
 
@@ -57,7 +57,7 @@ define(
         unit = r.getUnit( techs[i] );
         if( unit )
           techs[i].addUnit( unit );
-      };
+      }
     },
 
 
@@ -80,7 +80,7 @@ define(
         unit = renderables[i].getUnit( technic );
         if( unit )
           technic.addUnit( unit );
-      };
+      }
     },
 
 
