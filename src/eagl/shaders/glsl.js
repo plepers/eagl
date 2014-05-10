@@ -32,6 +32,18 @@ define( function(){
     this.str = type +' '+ name+';';
   }
 
+  GLSLValue.prototype = {
+
+    toString : function(){
+      return this.str;
+    },
+
+    valueOf : function(){
+      return this.str;
+    }
+
+  }
+
 
   glsl.vec2  = function( name ){ return new GLSLValue( vec2_type, name ); };
   glsl.vec3  = function( name ){ return new GLSLValue( vec3_type, name ); };

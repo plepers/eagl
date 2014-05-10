@@ -21,15 +21,15 @@ define(
       DEPTH
       NORMAL
     */
-    getPass : function( technic ){
-      var tid = technic.id;
-          pass = this._passMap[ tid ];
+    getPass : function( output ){
+      var outputId = output.id;
+          pass = this._passMap[ outputId ];
 
       if( !pass ){
-        pass = this._createPass( technic );
+        pass = this._createPass( output );
         if( pass ){
           this._passes.push( pass );
-          this._passMap[ tid ] = pass;
+          this._passMap[ outputId ] = pass;
         }
       }
 
@@ -40,7 +40,7 @@ define(
       return this._passes;
     },
 
-    _createPass : function( technic ){
+    _createPass : function( output ){
       return new MaterialPass();
     },
 

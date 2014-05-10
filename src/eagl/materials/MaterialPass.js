@@ -1,30 +1,40 @@
 
-define( function(){
+define(
+  [
+    'eagl/shaders/Program',
+    './common/Projection',
+    './common/UVVarying'
+  ],
+  function(
+    Program,
+    Projection,
+    UVVarying
+  ){
 
 
 
   function MaterialPass(){
 
-    this.uniforms   = {};
-    this.attributes = {};
+    this.program    = new Program();
+    this.program.addChunk( Projection.getInstance() );
+    this.program.addChunk( UVVarying.getInstance(0) );
 
-    this.uniformsList   = [];
-    this.attributesList = [];
-
-    this.defines    = {};
-
+    var h = {};
+    this.program.getCode( h );
+    console.log( h.v );
+    console.log( h.f );
 
   }
 
   MaterialPass.prototype = {
 
-    getFragmentCode : function() {
-      return "";
+    addTechnic: function( shaderPart )
+    {
+      this.program.addChunk( shaderPart );
     },
 
-
-    getVertexCode : function() {
-      return "";
+    getProgram: function( gl ) {
+      return null;
     }
 
   };

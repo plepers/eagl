@@ -20,7 +20,10 @@ define( function(){
           this.map[val.name] = val;
         }
       }
-    }
+    },
+
+
+
 
 
   };

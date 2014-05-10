@@ -15,8 +15,8 @@ define(
 
     this._renderables = [];
     this._viewports   = [];
-    this._technics    = [];
-    this._technicMap  = {};
+    this._outputs    = [];
+    this._outputsMap  = {};
 
   }
 
@@ -34,71 +34,71 @@ define(
     removeRenderable : function( r ){
       var ar = this._renderables,
           i = ar.indexOf( r ),
-          techs = this._technics,
+          outs = this._outputs,
           unit;
 
       if( i > -1 ){
 
         ar.splice( i, 1 );
 
-        for ( i = 0, l = techs.length; i < l; i++) {
-          unit = r.getUnit( techs[i] );
+        for ( i = 0, l = outs.length; i < l; i++) {
+          unit = r.getUnit( outs[i] );
           if( unit )
             unit.remove();
         }
       }
     },
 
-    updateRenderable : function( r ){
-      var techs = this._technics,
+    updateRenderable: function( r ){
+      var outs = this._outputs,
           unit;
 
-      for (var i = 0, l = techs.length; i < l; i++) {
-        unit = r.getUnit( techs[i] );
+      for (var i = 0, l = outs.length; i < l; i++) {
+        unit = r.getUnit( outs[i] );
         if( unit )
-          techs[i].addUnit( unit );
+          outs[i].addUnit( unit );
       }
     },
 
 
     //
-    // technics related stuffs
+    // outputs related stuffs
     //
 
-    addTechnic : function( technic ){
-      var map = this._technicMap,
+    addOutput: function( output ){
+      var map = this._outputsMap,
           renderables = this._renderables,
-          id = technic.id,
+          id = output.id,
           unit;
 
       if( map[id] === undefined ) {
-        map[id] = technic;
-        this._technics.push( technic );
+        map[id] = output;
+        this._outputs.push( output );
       }
 
       for (var i = 0, l = renderables.length; i < l; i++) {
-        unit = renderables[i].getUnit( technic );
+        unit = renderables[i].getUnit( output );
         if( unit )
-          technic.addUnit( unit );
+          output.addUnit( unit );
       }
     },
 
 
-    removeTechnic : function( technic ){
-      var map = this._technicMap,
-          arr = this._technics;
+    removeOutput: function( output ){
+      var map = this._outputsMap,
+          arr = this._outputs;
 
       // todo - dispose related units
       if( map[id] !== undefined ) {
-        delete map[technic.id];
-        arr.splice( arr.indexOf( technic ) );
+        delete map[output.id];
+        arr.splice( arr.indexOf( output ) );
       }
 
       // todo !!! delete units from renderables
     },
 
-    getTechnic : function( id ){
-      return this._technicMap[id];
+    getOutput: function( id ){
+      return this._outputsMap[id];
     }
 
 

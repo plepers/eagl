@@ -21,6 +21,9 @@ define( function(){
     // type Rectangle
     this.scissor = null;
 
+    // ouput providing batch to render in this viewport
+    this.output = null;
+
   }
 
   Viewport.prototype = {

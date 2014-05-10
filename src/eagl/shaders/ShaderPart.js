@@ -3,13 +3,17 @@
 define( function(){
 
   function ShaderPart(){
-    this.uniforms   = [];
-    this.varyings   = [];
-    this.attributes = [];
-    this.defines    = [];
+    this.v_uniforms   = [];
+    this.f_uniforms   = [];
+    this.varyings     = [];
+    this.attributes   = [];
+    this.v_defines    = [];
+    this.f_defines    = [];
 
-    this.preCode    = null;
-    this.mainCode   = null;
+    this.v_preCode    = null;
+    this.v_mainCode   = null;
+    this.f_preCode    = null;
+    this.f_mainCode   = null;
   }
 
   ShaderPart.prototype = {

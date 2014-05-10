@@ -52,16 +52,16 @@ define( [
           hasCfg    = ( null !== glConfig );
 
       if( hasCfg ) {
-        glContext.pushConfig( glConfig );
-        glContext.applyConfig();
+        this.glContext.pushConfig( glConfig );
+        this.glContext.applyConfig();
       }
 
 
-
+      // process here
 
 
       if( hasCfg ) {
-        glContext.popConfig();
+        this.glContext.popConfig();
       }
 
 

@@ -7,7 +7,7 @@ define(
     'eagl/objects/Scene',
     'eagl/materials/Material',
     'eagl/core/Renderable',
-    'eagl/core/Technic',
+    'eagl/core/Output',
     'eagl/core/RenderUnit'
   ],
   function(
@@ -18,7 +18,7 @@ define(
     Scene,
     Material,
     Renderable,
-    Technic,
+    Output,
     RenderUnit
     ){
 
@@ -38,40 +38,40 @@ define(
     describe( "objects - Scene", function(){
 
 
-      describe( "add technics", function(){
+      describe( "add Outputs", function(){
 
 
           var scene = new Scene();
 
-          var technic = new Technic( 1 );
-          technic.addBatch( 0, 0x1 );
-          technic.addBatch( 1, 0x2 );
-          scene.pipeline.addTechnic( technic );
+          var output = new Output( 1 );
+          output.addBatch( 0, 0x1 );
+          output.addBatch( 1, 0x2 );
+          scene.pipeline.addOutput( output );
 
-          technic = new Technic( 2 );
-          technic.addBatch( 0, 0x1 );
-          technic.addBatch( 1, 0x2 );
-          scene.pipeline.addTechnic( technic );
+          output = new Output( 2 );
+          output.addBatch( 0, 0x1 );
+          output.addBatch( 1, 0x2 );
+          scene.pipeline.addOutput( output );
 
 
       });
 
 
 
-      describe( "add technics and renderables", function(){
+      describe( "add outputs and renderables", function(){
 
 
           var scene = new Scene();
 
-          var technic = new Technic( 1 );
-          technic.addBatch( 0, 1 );
-          technic.addBatch( 1, 2 );
-          scene.pipeline.addTechnic( technic );
+          var output = new Output( 1 );
+          output.addBatch( 0, 1 );
+          output.addBatch( 1, 2 );
+          scene.pipeline.addOutput( output );
 
-          technic = new Technic( 2 );
-          technic.addBatch( 0, 1 );
-          technic.addBatch( 1, 2 );
-          scene.pipeline.addTechnic( technic );
+          output = new Output( 2 );
+          output.addBatch( 0, 1 );
+          output.addBatch( 1, 2 );
+          scene.pipeline.addOutput( output );
 
 
           scene.add( createObject( "m0" ) );
