@@ -1,0 +1,213 @@
+
+
+// update MatriwWold
+
+
+
+// collect and sort render units
+
+
+
+// run units
+
+for viewport
+
+  for Batchs (if vp.mask & Batch.mask)
+
+      for unit in units
+
+        GLConfig  << pass.glConfig
+
+            blend func
+            depth test
+            culling
+            stencil
+            target
+
+
+        Attributes << geom.attributes
+
+            position
+            normal
+            uv[]
+            color[]
+            ...
+
+        renderable params
+
+            matrix
+            matrixWorld
+            MVP
+
+
+        pass params
+
+            pass.uniforms
+            samplers
+
+
+        geom params
+
+            geom.uniforms
+            animations?
+
+
+        draw
+
+            geom.method?
+            geom.indices (%range)
+
+
+
+
+
+
+
+UNIT
+  pass
+  geom
+  glConfig
+
+
+Materials
+=============
+
+- attributes preprocess
+- projection
+
+- technics
+
+    - varying process
+    - output color
+
+
+
+
+
+Pipeline
+============
+
+Renderables
+                    r1      r2      r3      r4      r5
+    masks           101     101     001     110     001
+
+
+Render Units and Batchs
+Per technics combinaison
+
+Technic : COLOR
+    t 001      ->   rc1     rc2     rc3             rc5     ]
+    t 010      ->                           rc4             ] -> viewport / target
+
+
+Technic : DEPTH
+    t 100      ->   rd1     rd2             rd4             ] -> viewport / target Light 1
+                                                            ] -> viewport / target Light 2
+
+
+Technic : DEPTH | NORMAL
+    t 001      ->   rnd1    rnd2    rnd3            rnd5     ] -> viewport / multi target
+
+
+
+Batchs are created for a given technic, renderable's material added to Batch must provide pass for this technic
+
+Batchs have masks, when a renderable is added to scene, renderable mask is tested against available Batchs
+and a renderUnit is created and added to matching ones
+
+RenderUnits are combinaison of Pass, Geometry, Parameters and glConfig.
+
+Viewport are dedicated to Technic
+When rendering a viewport, viewport mask is tested against Batchs mask, only matching Batch are processed
+
+Viewports have priority, and are always processed ordered
+VP priority should be determined from passes dependencies to other VP
+
+Viewport can render [0,N] Batchs
+A Batch can be rendered by [0,N] viewports
+
+
+One renderable should create only one renderUnit per technic
+
+
+
+
+use case :
+
+
+    Basic
+
+        Scene opaques/blended
+
+        Steps :
+
+            The scene create a viewport with COLOR technic for rendering object
+
+            viewport is added to pipeline (default priority)
+
+            COLOR technic is allocated to pipeline since it doesn't exist yet
+            viewport is registered in this COLOR technic
+
+            2 Threads are created for opaque ( 001 ) and blended ( 010 )
+            ????  crated form VP or Technic ?
+
+            renderables are added to pipeline
+
+            for each technic > Batchs, renderable mask is tested and renderables added to matching Batchs
+
+
+
+
+
+
+
+    Complex
+
+        Scene opaques/blended + lights and shadows + ssao
+        rtt : shadow maps, normals
+        post fx : ssao
+
+
+
+
+
+        Steps
+
+            the scene has a viewport with mask <1>, set with a target (post fx/ssao)
+
+            opaques and blended added on separate Batchs 2 and 3 with COLOR technic
+            those Batchs are sorted ascending / descending
+
+            2 lights lA and lB are added,
+            Light lA activate shadow mapping
+            lA create a viewport for shadowmap rendering with a dedicated mask <2>
+
+            materials who cast shadow for light lA creates depth pass with lA's mask
+
+            those depth passes are added in separate Batch, lA's mask added to it
+
+            ssao Fx  added
+
+            ssao require normals and depth, create 2 viewport with mask <1>
+                => need a way to "duplicate" whole classic passes to depth or normal or whatever passes
+
+
+
+
+
+            Batchs
+                0 : normals mask <?>
+                1 : depth   mask <2>
+                2 : opaqu   mask <1>
+                3 : blend   mask <1>
+
+            viewports
+                0 : Shadowmap lA
+                1 : main scene
+                2 : main scene normals
+                3 : main scene depths
+                4 : fx backBuffer
+
+
+
+
