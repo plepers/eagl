@@ -1,20 +1,42 @@
-define( function(){
+define( [
+  './GeomBuffer'
+],
+function(
+  GeomBuffer
+){
 
 
-  function Geometry(){
+  function Geometry( numVertices ){
+    this.buffers = [];
     this.attribs = [];
     this.map = {};
+
+    var wide = numVertices > 0xFFFF;
+    this.indexBuffer = new GeomBuffer.IndexBuffer( this, wide );
+
+    this.numVertices = numVertices;
   }
 
   Geometry.prototype = {
 
-    addAttribute : function( name, buffer ){
+    createBuffer : function()
+    {
+      var buffer = new GeomBuffer.VertexBuffer( this );
+      this.buffers.push( buffer );
+      return buffer;
+    },
+
+    _addAttribute : function( attribute )
+    {
+
+      var name = attribute.name;
+
       if( this.map[ name ] ){
-        return;
+        throw new Error( "Geometry.addAttribute : attribute already exist" );
       }
 
-      this.attribs.push( buffer );
-      this.map[ name ] = buffer;
+      this.attribs.push( attribute );
+      this.map[ name ] = attribute;
 
     },
 
@@ -23,5 +45,7 @@ define( function(){
     }
 
   };
+
+  return Geometry;
 
 });

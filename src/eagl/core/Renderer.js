@@ -18,7 +18,7 @@ define( [
 
     renderScene : function( scene ){
 
-      renderPipeline( scene.pipeline );
+      this.renderPipeline( scene.pipeline );
     },
 
     renderPipeline : function( pipeline ){

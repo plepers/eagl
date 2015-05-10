@@ -21,8 +21,6 @@ define(
 
     var h = {};
     this.program.getCode( h );
-    console.log( h.v );
-    console.log( h.f );
 
   }
 

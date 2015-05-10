@@ -25,7 +25,7 @@ define(
 
       this.v_uniforms.push( glsl.mat4( 'modelViewMatrix' ) );
       this.attributes.push( glsl.vec3( 'position' ) );
-      this.v_mainCode = "gl_Position = vec4(position, 1.0)*modelViewMatrix;"
+      this.v_mainCode = "gl_Position = vec4(position, 1.0)*modelViewMatrix;";
     }
 
     return Projection;

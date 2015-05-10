@@ -42,7 +42,7 @@ define( function(){
       return this.str;
     }
 
-  }
+  };
 
 
   glsl.vec2  = function( name ){ return new GLSLValue( vec2_type, name ); };

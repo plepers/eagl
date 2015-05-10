@@ -27,7 +27,7 @@ define(
 
       this.varyings.push( glsl.vec2( 'vUv'+channel ) );
       this.attributes.push( glsl.vec2( 'uv'+channel ) );
-      this.v_mainCode = "vUv" + channel +" = uv"+channel+";"
+      this.v_mainCode = "vUv" + channel +" = uv"+channel+";";
     }
 
     return UVVarying;

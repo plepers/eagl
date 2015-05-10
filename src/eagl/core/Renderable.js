@@ -38,6 +38,11 @@ define(
     },
 
 
+    setGeometry : function( geom ){
+      this._geometry = geom;
+    },
+
+
     _createUnit : function( technic ){
       var pass, unit;
       if( this._material ) {

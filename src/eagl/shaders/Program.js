@@ -125,7 +125,7 @@ define(
           vCode    += _TAB + chunk.v_mainCode + _NL;
         if( chunk.f_mainCode )
           fCode    += _TAB + chunk.f_mainCode + _NL;
-      };
+      }
 
       holder.v = vPreCode + _wrap( vCode );
       holder.f = fPreCode + _wrap( fCode );
